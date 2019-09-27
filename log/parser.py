@@ -63,6 +63,9 @@ if __name__ == '__main__':
         t.start()
 
     # Read file line by line
+    if len(sys.argv) < 2:
+        print("missing input file name")
+        sys.exit()
     input_stream = open(sys.argv[1], "r")
     for line in input_stream:
         queue.put(line)
