@@ -8,11 +8,11 @@ from queue import Queue
 unique_keys = set()
 
 
-def process_new_line(line):
-    # TODO: deep tree traversal
-    j = json.loads(line)
+def tree_traversal(j):
     for k in j.keys():
         unique_keys.add(k)
+        if isinstance(j[k], dict):
+            tree_traversal(j[k])
 
 
 class ThreadClass(threading.Thread):
@@ -25,12 +25,13 @@ class ThreadClass(threading.Thread):
     def run(self):
         while True:
             # Get from queue job
-            json_line = self.jobs_queue.get()
-            process_new_line(json_line)
+            line = self.jobs_queue.get()
+            json_line = json.loads(line)
+            tree_traversal(json_line)
             # signals to queue job is done
 
             with self.bytes.get_lock():
-                self.bytes.value += len(json_line.encode('utf-8'))
+                self.bytes.value += len(line.encode('utf-8'))
             self.jobs_queue.task_done()
 
 
@@ -81,7 +82,6 @@ if __name__ == '__main__':
 
     # wait on the queue until everything has been processed
     jobs.join()
-    print(unique_keys)
 
     output_stream = open("output.txt", "w")
     output_stream.write(unique_keys.__str__())
