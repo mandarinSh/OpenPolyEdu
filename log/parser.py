@@ -1,31 +1,15 @@
 #!/usr/bin/env python3
 
-import sys, os
-from urllib.request import urlopen
+import sys, json, threading, time, os
 
-import ijson
-import json
-
-import time
-import multiprocessing.pool as mp
-import _thread
-import threading
+from multiprocessing import Value
 from queue import Queue
 
-"""
-Because we’re assuming that the JSON file won’t fit in memory, 
-we can’t just directly read it in using the json library. 
-Instead, we’ll need to iteratively read it in in a memory-efficient way.
-"""
-
 unique_keys = set()
-# output_stream = open("output.txt", "w")
-# job queue
-queue = Queue()
 
 
-def process_new_line(input):
-    print(_thread.get_ident())
+def process_new_line(line):
+    # TODO: deep tree traversal
     j = json.loads(line)
     for k in j.keys():
         unique_keys.add(k)
@@ -33,45 +17,72 @@ def process_new_line(input):
 
 class ThreadClass(threading.Thread):
 
-    def __init__(self, queue):
+    def __init__(self, jobs_queue, bytes):
         threading.Thread.__init__(self)
-        self.queue = queue
+        self.jobs_queue = jobs_queue
+        self.bytes = bytes
 
     def run(self):
         while True:
             # Get from queue job
-            line = self.queue.get()
-            process_new_line(line)
+            json_line = self.jobs_queue.get()
+            process_new_line(json_line)
             # signals to queue job is done
-            self.queue.task_done()
+
+            with self.bytes.get_lock():
+                self.bytes.value += len(json_line.encode('utf-8'))
+            self.jobs_queue.task_done()
+
+
+class StatusThread(threading.Thread):
+
+    def __init__(self, bytes):
+        threading.Thread.__init__(self)
+        self.start_time = time.time()
+        self.bytes = bytes
+
+    def run(self):
+        while True:
+            time.sleep(10)
+            now = time.time()
+            elapsed_time = round(now - self.start_time)
+            bytes_count = self.bytes.value
+            print("Elapsed time: " + str(elapsed_time) + " seconds")
+            print("Processed: " + str(bytes_count) + " bytes (" + str(bytes_count >> 30) + " Gi)")
+            if elapsed_time % 60 == 0:
+                print("\n------------------------\nKEYS:\n")
+                print(unique_keys)
+                print("\n------------------------\n")
 
 
 if __name__ == '__main__':
-    # thread_pool.apply_async(process_new_line, args=(input_straem))
-    # # output_stream.close()
-    #
-    # thread_pool.join()
-    # print(unique_keys)
+    jobs = Queue()
+    bytes = Value("l", 0)  # 'i' = 'int'
 
-    start = time.time()
-
-    # Create number process
-    for i in range(8):
-        t = ThreadClass(queue)
+    for i in range(1):
+        t = ThreadClass(jobs, bytes)
         t.setDaemon(True)
-        # Start thread
         t.start()
+
+    t = StatusThread(bytes)
+    t.setDaemon(True)
+    t.start()
 
     # Read file line by line
     if len(sys.argv) < 2:
         print("missing input file name")
         sys.exit()
-    input_stream = open(sys.argv[1], "r")
+
+    filename = sys.argv[1]
+    input_stream = open(filename, "r")
+    print("File (" + filename + ") have size: " + str(os.path.getsize(filename)) + " bytes\n")
     for line in input_stream:
-        queue.put(line)
+        jobs.put(line)
 
     # wait on the queue until everything has been processed
-    queue.join()
+    jobs.join()
     print(unique_keys)
-    end = time.time()
-    print("Elapsed time: " + str(end - start))
+
+    output_stream = open("output.txt", "w")
+    output_stream.write(unique_keys.__str__())
+    output_stream.close()
