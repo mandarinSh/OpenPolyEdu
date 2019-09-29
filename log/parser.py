@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 
-import sys, json, threading, time, os
+import sys, json, threading, time, os, pprint
 
 from multiprocessing import Value
 from queue import Queue
@@ -53,6 +53,7 @@ class StatusThread(threading.Thread):
             if elapsed_time % 60 == 0:
                 print("\n------------------------\nKEYS:\n")
                 print(unique_keys)
+                # pprint.PrettyPrinter(indent=4).pprint(unique_keys)
                 print("\n------------------------\n")
 
 
@@ -84,5 +85,5 @@ if __name__ == '__main__':
     jobs.join()
 
     output_stream = open("output.txt", "w")
-    output_stream.write(unique_keys.__str__())
+    output_stream.write(pprint.PrettyPrinter(indent=4).pprint(unique_keys))
     output_stream.close()
