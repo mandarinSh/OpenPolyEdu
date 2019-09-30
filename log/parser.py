@@ -85,5 +85,5 @@ if __name__ == '__main__':
     jobs.join()
 
     output_stream = open("output.txt", "w")
-    output_stream.write(pprint.PrettyPrinter(indent=4).pprint(unique_keys))
+    output_stream.write(pprint.PrettyPrinter(indent=4).pformat(unique_keys))
     output_stream.close()
