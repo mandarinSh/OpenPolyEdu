@@ -1,0 +1,26 @@
+v0.0.1
+  1. Distribution skeleton has been added
+
+v0.0.2
+  1. Python distr has been added
+  2. Startup.bat script updated
+  3. Added PY scripts, taken from Git
+  4. Added sample logs from OpenEdu to 'input' directory
+
+v0.0.3
+  1. "Docs" are added
+  2. Changes in structure of scripts
+  3. Minor update of startup.bat
+
+v0.0.4
+  1. 7Zip is now embedded to the distr, that makes the dist to be totally free from any pre-installed soft
+  2. Added question for user with which data to procceed: local data from input directory or from remote downloading from OpenEdu
+  3. Added directory "system_logs" for debuggins and tracing
+  4. Additional output to the command line for debugging purposes
+  5. Minor bug fixes
+
+v0.0.5
+  1. Embedded Python has been replaced with the one built from sources
+  2. Added steps to installation of pip in bat script
+  3. Added step for installation of psycopg2 in bat script
+  4. Added possibility to establish connection with PostgreSQL server and create database 'OpenEduDatabase', which purpose is to preserver the logs.

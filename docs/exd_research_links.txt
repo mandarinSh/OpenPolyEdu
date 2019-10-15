@@ -1,0 +1,1 @@
+The resource contains the information about research on edx data: http://docs.lms.tpu.ru/projects/devdata/ru/latest/front_matter/index.html

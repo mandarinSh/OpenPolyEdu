@@ -1,0 +1,2 @@
+Link to the description of edx event types:
+ https://github.com/edx/edx-documentation/blob/b5bf2cad349b4a330c3159301a51975884d1d5ad/en_us/data/source/internal_data_formats/tracking_logs/student_event_types.rst#id383

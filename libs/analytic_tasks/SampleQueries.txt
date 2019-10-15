@@ -1,0 +1,55 @@
+# Get all amount of logs
+SELECT COUNT(*) FROM logs
+
+# Get unique user names
+select DISTINCT  log_line -> 'username' AS user_name from logs
+
+# Get unique user names and their ids
+select log_line -> 'username' as user_name,
+       log_line #>> '{context, user_id}' AS user_id
+from logs
+GROUP BY user_name, user_id
+order by user_name
+
+# Get unique event types
+select DISTINCT log_line -> 'name' AS edx_event from logs
+
+# Get video start time per user and page
+select
+  log_line -> 'username' as user_name,
+  log_line #>> '{context, user_id}' AS user_id,
+  log_line ->> 'page' AS page,
+  TO_TIMESTAMP(log_line ->> 'time', 'YYYY-MM-DD"T"HH24:MI:SS')::TIMESTAMP as Video_Start_Time
+from logs
+WHERE log_line ->> 'name' = 'play_video'
+
+# Get video stop time per user
+select
+    log_line #>> '{context, user_id}' AS user_id,
+    log_line ->> 'page' AS page,
+    SUM(extract(epoch from TO_TIMESTAMP(log_line ->> 'time', 'YYYY-MM-DD"T"HH24:MI:SS')::TIMESTAMP)) as Video_Stop_Time
+from logs
+WHERE log_line ->> 'name' = 'stop_video'
+    or log_line ->> 'name' = 'pause_video'
+GROUP BY user_id, page
+
+#Get page(section) duration by user
+SELECT startTime.user_id, startTime.page, stopTime.Video_Stop_Time-startTime.Video_Start_Time as Duration FROM (
+	select
+		log_line #>> '{context, user_id}' AS user_id,
+		log_line ->> 'page' AS page,
+		SUM(extract(epoch from TO_TIMESTAMP(log_line ->> 'time', 'YYYY-MM-DD"T"HH24:MI:SS')::TIMESTAMP)) as Video_Stop_Time
+	from logs
+	WHERE log_line ->> 'name' = 'stop_video'
+	    or log_line ->> 'name' = 'page_close'
+	GROUP BY user_id, page) stopTime
+INNER JOIN (
+	select
+		log_line #>> '{context, user_id}' AS user_id,
+		log_line ->> 'page' AS page,
+		SUM(extract(epoch from TO_TIMESTAMP(log_line ->> 'time', 'YYYY-MM-DD"T"HH24:MI:SS')::TIMESTAMP)) as Video_Start_Time
+	from logs
+	WHERE log_line ->> 'name' = 'play_video'
+	GROUP BY user_id, page
+) startTime
+ON startTime.user_id=stopTime.user_id and startTime.page=stopTime.page
