@@ -31,13 +31,15 @@ The script then perform following actions:
   - launch 'query_analytic_task.bat' script from 'bin' directory' in order to see the results
   
  ## Custom run
- The scripts in 'bin' folder allows a user flexible operations over the analytic utility. User may run server, load data, clean working directory or run analytic tasks independently. But it is required a bit of experience with teh product. 
+ The scripts in 'bin' folder allows a user flexible operations over the analytic utility. User may run server, load data, clean working directory or run analytic tasks independently. But it is required a bit of experience with the product. 
  
 ## OpenEdu logs
 The OpenEdu portal provides an activity log in [JSON](http://json.org/) format.
 More precisely, log is a multiline file, where each line is an JSON object. 
 
 ### Edx even types documentation
+There is a most full docs in [Edx Research Guide](https://edx.readthedocs.io/projects/devdata/en/stable/internal_data_formats/tracking_logs.html)
+
 Description of [common log fields](https://github.com/edx/edx-documentation/blob/b5bf2cad349b4a330c3159301a51975884d1d5ad/en_us/data/source/internal_data_formats/tracking_logs/common_fields.rst)
 
 Description of [edx event types](https://github.com/edx/edx-documentation/blob/b5bf2cad349b4a330c3159301a51975884d1d5ad/en_us/data/source/internal_data_formats/tracking_logs/student_event_types.rst#id383)
@@ -72,3 +74,15 @@ The below log line shows the even generated for the user action, when starting p
 
 ## Relative works
  - http://docs.lms.tpu.ru/projects/devdata/ru/latest/front_matter/index.html
+
+#Development 
+
+## Test environment
+Nikita needs to be asked about VM IP and creds
+
+## Useful links
+Edx docs: Installing, Configuring, and Running the Open edX Platform: [Hawthorn Release](https://buildmedia.readthedocs.org/media/pdf/edx-installing-configuring-and-running/open-release-hawthorn.master/edx-installing-configuring-and-running.pdf)
+
+There is a Python library to [work with edx](https://github.com/coursera-dl/edx-dl). It may help us. 
+
+Edx tools are [here](https://github.com/edx/edx-tools/wiki)
