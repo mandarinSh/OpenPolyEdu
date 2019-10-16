@@ -14,7 +14,7 @@ call %PYTHON_HOME%\python.exe -V
 
 @rem =======================Install Python Packages=========================================
 echo Installing Python packages with 'pip'
-call %PYTHON_HOME%\python.exe %SOFT_PATH%PytonAddons\get-pip.py
+call %PYTHON_HOME%\python.exe %SOFT_PATH%PythonAddons\get-pip.py
 call %PYTHON_HOME%\Scripts\pip.exe install psycopg2
 call %PYTHON_HOME%\Scripts\pip install tabulate
 @rem ============================================================================================
