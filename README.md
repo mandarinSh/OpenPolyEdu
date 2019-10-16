@@ -1,5 +1,6 @@
 # OpenPolyEdu
 This is a project of Peter the Great St.Petersburg Polytechnic University (SPbPU) students based on course [Big Data](https://openedu.ru/course/spbstu/BIGDATA/).
+More information can be found at presentation: 'docs/2019_OpenEdu_Concept_v2.pptx'
 
 ## Project goal
 OpenEdu portal provides an information about user activity on the course in the log file.  
@@ -69,3 +70,5 @@ The below log line shows the even generated for the user action, when starting p
 }
 ```
 
+## Relative works
+ - http://docs.lms.tpu.ru/projects/devdata/ru/latest/front_matter/index.html
