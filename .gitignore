@@ -1,2 +1,8 @@
 *.json
 .idea
+.zip
+venv
+/input/anonymized_logs.zip
+__pycache__
+soft
+/docs/2019_OpenEdu_Concept_v2.pptx
