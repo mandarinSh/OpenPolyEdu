@@ -1,8 +1,10 @@
-# Get all amount of logs
+# Get all amount of records in log
 SELECT COUNT(*) FROM logs
 
+
 # Get unique user names
-select DISTINCT  log_line -> 'username' AS user_name from logs
+select DISTINCT log_line -> 'username' AS user_name from logs
+
 
 # Get unique user names and their ids
 select log_line -> 'username' as user_name,
@@ -11,8 +13,39 @@ from logs
 GROUP BY user_name, user_id
 order by user_name
 
+
 # Get unique event types
 select DISTINCT log_line -> 'name' AS edx_event from logs
+
+
+# Count amount of established user sessions
+select
+	log_line ->> 'username' as User_Name,
+	log_line #>> '{context, user_id}' as User_Id,
+	count(log_line ->> 'session') as Sessions_used
+from logs
+where
+	log_line #>> '{context, user_id}' != 'null'
+	and log_line #>> '{session}' != 'null'
+group by
+	User_Name, User_Id
+order by Sessions_used desc
+
+
+# Count event number per user session
+select
+	log_line ->> 'username' as User_Name,
+	log_line #>> '{context, user_id}' as User_Id,
+	log_line ->> 'session' as Session_Id,
+	count(log_line ->> 'session') as Events_per_session
+from logs
+where
+	log_line #>> '{context, user_id}' != 'null'
+	and log_line #>> '{session}' != 'null'
+group by
+	User_Name, User_Id, Session_Id
+order by events_per_session desc
+
 
 # Get video start time per user and page
 select
@@ -23,6 +56,7 @@ select
 from logs
 WHERE log_line ->> 'name' = 'play_video'
 
+
 # Get video stop time per user
 select
     log_line #>> '{context, user_id}' AS user_id,
@@ -32,6 +66,7 @@ from logs
 WHERE log_line ->> 'name' = 'stop_video'
     or log_line ->> 'name' = 'pause_video'
 GROUP BY user_id, page
+
 
 #Get page(section) duration by user
 SELECT startTime.user_id, startTime.page, stopTime.Video_Stop_Time-startTime.Video_Start_Time as Duration FROM (

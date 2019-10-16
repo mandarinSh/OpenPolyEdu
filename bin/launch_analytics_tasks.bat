@@ -31,7 +31,7 @@ IF "%TASK_TO_EXECUTE%"=="1" (
    @rem TODO: Put here invocation of the required implementation '..\libs\analytic_tasks'
    echo TODO
 ) ELSE IF "%TASK_TO_EXECUTE%"=="6" (
-   echo Thank you for using the tool.
+   echo Thank you for using the tool!
 ) ELSE (
   echo Selected unsupported option.
   goto enterTaskName

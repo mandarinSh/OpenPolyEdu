@@ -1,4 +1,5 @@
 # OpenPolyEdu
+This is a project of Peter the Great St.Petersburg Polytechnic University (SPbPU) students based on course [Big Data](https://openedu.ru/course/spbstu/BIGDATA/).
 
 ## Project goal
 OpenEdu portal provides an information about user activity on the course in the log file.  
@@ -36,7 +37,11 @@ The OpenEdu portal provides an activity log in [JSON](http://json.org/) format.
 More precisely, log is a multiline file, where each line is an JSON object. 
 
 ### Edx even types documentation
+Description of [common log fields](https://github.com/edx/edx-documentation/blob/b5bf2cad349b4a330c3159301a51975884d1d5ad/en_us/data/source/internal_data_formats/tracking_logs/common_fields.rst)
+
 Description of [edx event types](https://github.com/edx/edx-documentation/blob/b5bf2cad349b4a330c3159301a51975884d1d5ad/en_us/data/source/internal_data_formats/tracking_logs/student_event_types.rst#id383)
+
+Description of [course team events](https://github.com/edx/edx-documentation/blob/b5bf2cad349b4a330c3159301a51975884d1d5ad/en_us/data/source/internal_data_formats/tracking_logs/course_team_event_types.rst)
 
 ### Example of log line 
 The below log line shows the even generated for the user action, when starting playing video

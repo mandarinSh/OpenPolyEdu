@@ -26,7 +26,7 @@ call load_data_to_database.bat
 
 @rem =======================Doing Analytics=====================================================
 @rem At this point the PostgreSQL database has been launched, data is loaded and ready for consumers
-call query_analytics_task.bat
+call launch_analytics_tasks.bat
 @rem ============================================================================================
 
 
