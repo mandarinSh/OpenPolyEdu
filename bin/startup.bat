@@ -33,5 +33,4 @@ call query_analytics_task.bat
 @rem =======================Stopping PostgresSQL====================================
 @rem At the very end of the analysis just shutdown the PostgeSQL server
 pause
-echo Stopping PostrgeSQL server
-%POSTGRESQL_HOME%\pg_ctl -D "%POSTGRESQL_DATABASE_PATH%" stop
+call stop_database_server.bat

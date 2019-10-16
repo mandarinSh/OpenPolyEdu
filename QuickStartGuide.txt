@@ -1,4 +1,0 @@
-In order to start working with application, just launch 'bin/startup.bat'.
-After all pre-requisites are executed by script, you will be prompted to select the analytics task for execution.
-
-Note: there is configuration file in 'config/application.yml', that requires to be prepopulated with credentials and addresses of OpenEdu.

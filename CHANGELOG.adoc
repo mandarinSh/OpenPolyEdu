@@ -1,0 +1,57 @@
+v0.0.1
+  1. Distribution skeleton has been added
+
+v0.0.2
+  1. Python distr has been added
+  2. Startup.bat script updated
+  3. Added PY scripts, taken from Git
+  4. Added sample logs from OpenEdu to 'input' directory
+
+v0.0.3
+  1. "Docs" are added
+  2. Changes in structure of scripts
+  3. Minor update of startup.bat
+
+v0.0.4
+  1. 7Zip is now embedded to the distr, that makes the dist to be totally free from any pre-installed soft
+  2. Added question for user with which data to procceed: local data from input directory or from remote downloading from OpenEdu
+  3. Added directory "system_logs" for debuggins and tracing
+  4. Additional output to the command line for debugging purposes
+  5. Minor bug fixes
+
+v0.0.5
+  1. Embedded Python has been replaced with the one built from sources
+  2. Added steps to installation of pip in bat script
+  3. Added step for installation of psycopg2 in bat script
+  4. Added possibility to establish connection with PostgreSQL server and create database 'OpenEduDatabase', which purpose is to preserver the logs.
+
+v0.0.6
+  1. Added functionality to load the logs to "OpenEduDatabase".
+  2. Added sample analytics that calculate unique user names. The result of the analytics is placed into 'result' folder in txt file.
+  3. Modified the way to select analytic tasks to be executed. Now it is done directly in bat script.
+  4. Deprecated scripts has been removed.
+  5. Cleaning result directory on startup
+  6. Extracting the logs to workdir instead of copying
+  7. More parameters for the scripts are added, instead of hardcoded values in py scripts. Now parameters are passed from startup.bat script.
+  NOTE: logs ingestion takes more than 1 hour, so in order to speed up test uncomment "break" in 'load_logs_to_database.py' line 32.
+
+v0.0.7
+  1. Added calculation of user names and user ids and output to the table format
+  2. Added calculation of unique event types names and output to the file
+  3. Additional python dependency installation 'tabulate'
+  4. Cycle in questioning the user with task to execute until 'Exit' is pressed
+  5. Minor updates and bug fixes in startup.bat
+
+v0.0.8
+  1. Bug fixes in loading data script (uncleaning of lines_array and incorrect count return value)
+  2. Speed improvement in data loading (batches per 100 items on insert)
+
+v0.0.9
+  1. Split startup script into logic parts that can be executed separately.
+     It is helpful when the database is already populated and only experiments needs to be performed.
+  2. Add several more complex queries into the 'libs/analytic_tasks'
+
+v0.0.10
+  1. Added script for stopping PostgeSQL server
+  2. Added readme
+  3. Additional folders are put under Git control

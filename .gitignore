@@ -1,8 +1,9 @@
-*.json
 .idea
-.zip
-venv
-/input/anonymized_logs.zip
 __pycache__
-soft
-/docs/2019_OpenEdu_Concept_v2.pptx
+venv
+
+soft/7-Zip/*
+soft/python-3.7.4.zip
+soft/openjdk-11.0.2_windows-x64_bin.zip
+soft/postgresql-12.0-1-windows-x64-binaries.zip
+/input/anonymized_logs.zip

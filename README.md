@@ -1,10 +1,41 @@
 # OpenPolyEdu
 
-# Log's analysis
+## Project goal
+OpenEdu portal provides an information about user activity on the course in the log file.  
 
-The log provided to us has [JSON](http://json.org/) format. More precisely, log is a multiline file, where each line is an JSON object.
+Since the log can be large enough (for exampel, it can be about 18GB and may contain more than 10 000 000 actions), then its manual analysis becomes impossible.
 
-### Example of 1 line: 
+The project goal is to create an infrastructure with set of default analytic tasks that can be applyed on any OpenEdut course.
+
+## Getting started 
+
+## Pre-requisites
+ - Windows 10 (x64)
+
+## The First run
+In order to start working with project just launch 'bin/startup.bat'.
+The script then perform following actions:
+ - clean 'workdir', 'system_logs' and 'result'
+ - install required software from 'soft' folder
+ - copy logs from 'input' folder to 'workdir'
+ - create PostgreSQL database and launch server
+ - ingest the data to database
+ - ask a user on which the analytic task to execute
+ - after the analytic task is executed, then the result can be found in 'result' folder
+ 
+ ## The Second run
+ If the software (Python, its packages and PostgreSQL) is already installed, if the database is already exists and the data is already loaded, then user may use only 
+  - launch PostgreSQL server with corresponding 'bat' script in the 'bin' directory
+  - launch 'query_analytic_task.bat' from 'bin' directory' in order to see the results
+  
+ ## Custom run
+ The scripts in 'bin' folder allows a user flexible operations over the alaytic utility. User may run server, load data, clean working directory or run analytic tasks independently. But it is required a bit of experience with teh product. 
+ 
+## OpenEdu logs
+The OpenEdu portal provides an activity log in [JSON](http://json.org/) format.
+More precisely, log is a multiline file, where each line is an JSON object. 
+
+### Example of log line 
 ```
 {
   "username": "plain-unkempt-blackstork",
@@ -27,13 +58,7 @@ The log provided to us has [JSON](http://json.org/) format. More precisely, log 
 }
 ```
 
-Since the log is large (18GB and may be larger in the future), its manual analysis becomes impossible.
-
-In order to understand what information is contained in the log, unique keys were allocated from all objects for further analysis.
-
 ===
 
-In order to start working with application, just launch ```bin/startup.bat```.
-After all pre-requisites are executed by script, you will be prompted to select the analytics task for execution.
-
-Note: there is configuration file in ```config/application.yml```, that requires to be prepopulated with credentials and addresses of OpenEdu.
+### Edx even types documentation
+Description of [edx event types](https://github.com/edx/edx-documentation/blob/b5bf2cad349b4a330c3159301a51975884d1d5ad/en_us/data/source/internal_data_formats/tracking_logs/student_event_types.rst#id383):
