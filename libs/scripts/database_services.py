@@ -37,6 +37,13 @@ def create_database(connection, database_name):
     print("Database " + database_name + " has been created")
 
 
+def drop_database(connection, database_name):
+    execute_query(connection, sql.SQL("DROP DATABASE IF EXISTS {}").format(
+        sql.Identifier(database_name))
+                  )
+    print("Database " + database_name + " has been removed")
+
+
 def drop_table(connection, table):
     drop_table_query = '''DROP TABLE IF EXISTS {0};'''.format(table)
     cursor = connection.cursor()

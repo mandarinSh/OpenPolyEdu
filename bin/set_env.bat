@@ -3,6 +3,7 @@ set SOFT_PATH=..\soft\
 set PY_SCRIPT_DIR=..\libs\scripts\
 set ANALYTICS_TASKS_DIR=..\libs\analytic_tasks\
 set RESULT_DIR=..\result\
+set INPUT_DIRECTORY=..\input\
 
 set SEV_ZIP_PATH="%SOFT_PATH%\7-Zip\7z.exe"
 set JDK_PATH=%WORKDIR_PATH%installed_soft\jdk

@@ -48,6 +48,7 @@ def main(argv):
 
     # The connection is used to create a new database for analytics
     connection = open_db_connection('postgres', user_name)
+    drop_database(connection, database_name)
     create_database(connection, database_name)
     close_db_connection(connection)
 
