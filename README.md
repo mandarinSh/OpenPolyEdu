@@ -73,9 +73,12 @@ The below log line shows the even generated for the user action, when starting p
 ```
 
 ## Relative works
- - http://docs.lms.tpu.ru/projects/devdata/ru/latest/front_matter/index.html
+ - Out-of-the-box [Edx analytics](https://edx.readthedocs.io/projects/edx-data-analytics-api/en/latest/index.html) 
+ - Research of one of [university](http://docs.lms.tpu.ru/projects/devdata/ru/latest/front_matter/index.html)
+ 
 
-#Development 
+# Development 
+TBD
 
 ## Test environment
 Nikita needs to be asked about VM IP and creds
@@ -86,3 +89,5 @@ Edx docs: Installing, Configuring, and Running the Open edX Platform: [Hawthorn 
 There is a Python library to [work with edx](https://github.com/coursera-dl/edx-dl). It may help us. 
 
 Edx tools are [here](https://github.com/edx/edx-tools/wiki)
+
+Edx [REST API Guide and Authentication](https://buildmedia.readthedocs.org/media/pdf/course-catalog-api-guide/latest/course-catalog-api-guide.pdf#page11)
