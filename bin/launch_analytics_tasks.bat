@@ -6,11 +6,11 @@ echo Select the task number to be executed:
 echo   1. Calculate unique user names.
 echo   2. Calculate unique event names.
 echo   3. Calculate unique user names and ids.
-echo   4. Calculate user time per page.
+echo   4. Show amount of video play events per day.
 echo   5. Compare courses launches.
 echo   6. Exit
 echo   ' ... '
-echo   NOTE: the result of analytics can be found in "result" directory
+echo   NOTE: the result of analytics can be found in "result" directory or the browser will be opened automatically.
 
 set /p TASK_TO_EXECUTE="Task number to execute: "
 
@@ -25,7 +25,7 @@ IF "%TASK_TO_EXECUTE%"=="1" (
   call %PYTHON_HOME%\python.exe %PY_SCRIPT_DIR%unique_user_names_and_ids.py %DATABASE_NAME% %USER_NAME% %RESULT_DIR%unique_user_names_and_ids.txt
   goto enterTaskName
 ) ELSE IF "%TASK_TO_EXECUTE%"=="4" (
-  call %PYTHON_HOME%\python.exe %PY_SCRIPT_DIR%user_time_per_page.py %DATABASE_NAME% %USER_NAME% %RESULT_DIR%user_time_per_page.txt
+  call %PYTHON_HOME%\python.exe %PY_SCRIPT_DIR%play_video_count_per_day.py %DATABASE_NAME% %USER_NAME% %RESULT_DIR%play_video_count_per_day.csv
   goto enterTaskName
 ) ELSE IF "%TASK_TO_EXECUTE%"=="5" (
    @rem TODO: Put here invocation of the required implementation '..\libs\analytic_tasks'

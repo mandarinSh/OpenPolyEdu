@@ -46,6 +46,14 @@ group by
 	User_Name, User_Id, Session_Id
 order by events_per_session desc
 
+# Calculate video start times per day
+select
+    TO_DATE(log_line ->> 'time', 'YYYY-MM-DD"T"HH24:MI:SS') as time_run,
+    count (*) as count_of_start
+from logs
+where log_line ->> 'event_type' = 'play_video'
+group by time_run
+order by time_run
 
 # Get video start time per user and page
 select

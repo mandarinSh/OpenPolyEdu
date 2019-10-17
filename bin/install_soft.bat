@@ -16,5 +16,9 @@ call %PYTHON_HOME%\python.exe -V
 echo Installing Python packages with 'pip'
 call %PYTHON_HOME%\python.exe %SOFT_PATH%PythonAddons\get-pip.py
 call %PYTHON_HOME%\Scripts\pip.exe install psycopg2
+@rem for visualization
 call %PYTHON_HOME%\Scripts\pip install tabulate
+call %PYTHON_HOME%\Scripts\pip install plotly==4.1.0
+call %PYTHON_HOME%\Scripts\pip install psutil requests
+call %PYTHON_HOME%\Scripts\pip install pandas
 @rem ============================================================================================
