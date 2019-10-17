@@ -5,6 +5,7 @@ from plotly.subplots import make_subplots
 import plotly.graph_objects as go
 from database_services import *
 
+
 def calculate_events_distribution_per_day(connection):
     print('Start query execution at ', datetime.datetime.now())
 
@@ -52,9 +53,9 @@ def generate_figure(event_distribution):
         events_dict[event_name]=dates
 
     event_length = len(events_dict)
-
+    row_count = event_length // 2 + event_length % 2
     fig = make_subplots(
-        rows=event_length, cols=1,
+        rows=row_count, cols=2,
         subplot_titles=(list(events_dict.keys())))
 
     count = 1
@@ -64,10 +65,12 @@ def generate_figure(event_distribution):
         for val in value:
             axes.append(val[0])
             yes.append(val[1])
-        fig.add_trace(go.Scatter(x=axes, y=yes, name=key), row=count, col=1)
+        row_number = count // 2 + count % 2
+        col_number = 2 - count % 2
+        fig.add_trace(go.Scatter(x=axes, y=yes, name=key), row=row_number, col=col_number)
         count += 1
 
-    fig.update_layout(height=count*200, width=800, title_text="Course event distribution per date")
+    fig.update_layout(height=count*250, width=1500, title_text="Course event distribution per date")
     print("Opening browser...")
     fig.show()
 
