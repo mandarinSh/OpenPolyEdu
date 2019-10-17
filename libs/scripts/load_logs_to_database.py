@@ -12,28 +12,28 @@ def create_logs_table(connection):
     print("Table logs has been created")
 
 
+def insert_lines(cur, lines_array):
+    records_list_template = ','.join(['(%s)'] * len(lines_array))
+    insert_query = 'INSERT INTO logs(log_line) VALUES {}'.format(records_list_template)
+    cur.execute(insert_query, lines_array)
+
+
 def ingest_logs(connection, logs_file):
     print('Start ingesting logs at ', datetime.datetime.now())
     lines_in_batch = 100
     lines_array = []
-    i = 0
     count = 0
     cur = connection.cursor()
     with open(logs_file, encoding="utf-8") as logs_file:
         for line in logs_file:
-            if i < lines_in_batch:
-                lines_array.append(line)
-                i += 1
-                count += 1
-            else:
-                records_list_template = ','.join(['(%s)'] * len(lines_array))
-                insert_query = 'INSERT INTO logs(log_line) VALUES {}'.format(records_list_template)
-                cur.execute(insert_query, lines_array)
-                i = 0
+            lines_array.append(line)
+            count += 1
+            if len(lines_array) >= lines_in_batch:
+                insert_lines(cur, lines_array)
                 lines_array = []
-                count += 1
-                # Uncomment break for speedup test on limited number of records
-                # break
+
+    if len(lines_array) > 0:
+        insert_lines(cur, lines_array)
 
     print('End ingesting logs at ', datetime.datetime.now())
     print('Records loaded: ', count)
