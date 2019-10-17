@@ -6,7 +6,7 @@ from database_services import *
 def calculate_event_names(connection):
     print('Start query execution at ', datetime.datetime.now())
 
-    get_unique_events_query = '''select DISTINCT log_line -> 'name' AS edx_event from logs'''
+    get_unique_events_query = '''select DISTINCT log_line -> 'name' AS edx_event from logs order by edx_event'''
 
     connection.set_isolation_level(ISOLATION_LEVEL_AUTOCOMMIT)
     cursor = connection.cursor()
