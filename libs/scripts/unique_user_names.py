@@ -17,7 +17,6 @@ def calculate_users(connection):
 
     print('End query execution at ', datetime.datetime.now())
     print("Users has been calculated")
-    print("")
     return user_names
 
 

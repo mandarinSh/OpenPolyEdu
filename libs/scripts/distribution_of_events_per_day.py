@@ -27,7 +27,6 @@ def calculate_events_distribution_per_day(connection):
 
     print('End query execution at ', datetime.datetime.now())
     print("Events distribution per day has been calculated")
-    print("")
     return events_distribution
 
 

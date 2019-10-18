@@ -26,7 +26,6 @@ def calculate_video_start_times(connection):
 
     print('End query execution at ', datetime.datetime.now())
     print("Play video event times has been calculated")
-    print("")
     return video_start_times
 
 

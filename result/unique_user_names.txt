@@ -3901,6 +3901,7 @@ shapely-important-ribbonseal
 shapely-jolly-muskdeer
 shapely-kind-bonobo
 shapely-kind-kowari
+shapely-lively-horseshoecrab
 shapely-mushy-barbirusapig
 shapely-mushy-tamandua
 shapely-nice-gentoopenguin

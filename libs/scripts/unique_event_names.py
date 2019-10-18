@@ -17,7 +17,6 @@ def calculate_event_names(connection):
 
     print('End query execution at ', datetime.datetime.now())
     print("Event names has been calculated")
-    print("")
     return event_names
 
 

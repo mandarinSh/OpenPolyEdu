@@ -18,7 +18,6 @@ def calculate_users_and_ids(connection):
 
     print('End query execution at ', datetime.datetime.now())
     print("Users and ids has been calculated")
-    print("")
     return user_names
 
 
