@@ -55,3 +55,13 @@ v0.0.10
   1. Added script for stopping PostgeSQL server
   2. Added readme
   3. Additional folders are put under Git control
+
+v0.0.11
+  1. Several new analytic tasks has been added including the graphics building
+  2. Several bug fixes in data loader script
+  3. Improvements in scritp for selection of log file uploading to database
+  4. Installation of additional dependencies in software for figures building
+  5. Several log files are provided for testing
+  6. Presentations are updated
+  7. Improvements in logging
+  8. Few more minor points I even do not remember =)
