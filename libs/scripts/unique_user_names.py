@@ -21,10 +21,10 @@ def calculate_users(connection):
 
 
 def write_result_to_file(result_file, result):
-    file = open(result_file,"w")
-    for item in result:
-        file.write("%s\n" % item)
-    file.close()
+    print('Start writing the data to file.')
+    with open(result_file,"w") as file:
+        for item in result:
+            file.write("%s\n" % item)
 
 
 def main(argv):

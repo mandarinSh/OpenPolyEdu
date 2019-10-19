@@ -59,14 +59,14 @@ def generate_figure(event_distribution):
 
     count = 1
     for key, value in events_dict.items():
-        axes = []
-        yes = []
+        x_axis = []
+        y_axis = []
         for val in value:
-            axes.append(val[0])
-            yes.append(val[1])
+            x_axis.append(val[0])
+            y_axis.append(val[1])
         row_number = count // 2 + count % 2
         col_number = 2 - count % 2
-        fig.add_trace(go.Scatter(x=axes, y=yes, name=key), row=row_number, col=col_number)
+        fig.add_trace(go.Scatter(x=x_axis, y=y_axis, name=key), row=row_number, col=col_number)
         count += 1
 
     fig.update_layout(height=count*250, width=1500, title_text="Course event distribution per date")

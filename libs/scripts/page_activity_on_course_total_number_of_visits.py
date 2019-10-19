@@ -55,28 +55,28 @@ def process_urls(result):
 def generate_figure(activity_distribution):
     print("Start figures generation...")
 
-    axes = []
-    yes = []
+    x_axis = []
+    y_axis = []
     for key, value in activity_distribution.items():
-        axes.append(key)
-        yes.append(value)
+        x_axis.append(key)
+        y_axis.append(value)
 
     fig = go.Figure(data=[go.Bar(
-        x=axes, y=yes,
-        text=yes,
+        x=x_axis, y=y_axis,
+        text=y_axis,
         textposition='auto',
     )])
 
     fig.update_layout(title_text='Amount of interactions with the course pages',
                       autosize=False,
-                      width=20*len(axes),
+                      width=20*len(x_axis),
                       height=1000)
     print("Opening browser...")
     fig.show()
 
 
 def write_result_to_file(result_file, result):
-    print('Start writhing the data to file.')
+    print('Start writing the data to file.')
     pd.DataFrame.from_dict(data=result, orient='index').to_csv(result_file, header=False)
 
 

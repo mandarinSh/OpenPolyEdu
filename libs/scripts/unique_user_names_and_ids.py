@@ -22,9 +22,9 @@ def calculate_users_and_ids(connection):
 
 
 def write_result_to_file(result_file, result):
-    file = open(result_file,"w")
-    file.write(tabulate(result, headers=['user_name', 'user_id']))
-    file.close()
+    print('Start writing the data to file.')
+    with open(result_file,"w") as file:
+        file.write(tabulate(result, headers=['user_name', 'user_id']))
 
 
 def main(argv):

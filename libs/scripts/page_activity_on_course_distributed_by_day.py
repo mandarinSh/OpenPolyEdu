@@ -73,14 +73,14 @@ def generate_figure(page_activity_per_day):
 
     count = 1
     for key, value in page_activity_per_day.items():
-        axes = []
-        yes = []
+        x_axis = []
+        y_axis = []
         for date in sorted(value.keys()):
-            axes.append(date)
-            yes.append(value.get(date))
+            x_axis.append(date)
+            y_axis.append(value.get(date))
         row_number = count
         col_number = 1
-        fig.add_trace(go.Scatter(x=axes, y=yes, name=key), row=row_number, col=col_number)
+        fig.add_trace(go.Scatter(x=x_axis, y=y_axis, name=key), row=row_number, col=col_number)
         count += 1
 
     fig.update_layout(
@@ -92,7 +92,7 @@ def generate_figure(page_activity_per_day):
 
 
 def write_result_to_file(result_file, result):
-    print('Start writhing the data to file.')
+    print('Start writing the data to file.')
     pd.DataFrame.from_dict(data=result, orient='index').to_csv(result_file, header=False)
 
 

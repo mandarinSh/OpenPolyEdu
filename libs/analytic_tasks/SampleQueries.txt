@@ -96,3 +96,47 @@ INNER JOIN (
 	GROUP BY user_id, page
 ) startTime
 ON startTime.user_id=stopTime.user_id and startTime.page=stopTime.page
+
+
+# Users session duration
+select
+	log_line #>> '{context, user_id}' as session_user_id,
+	log_line -> 'session' as session_name,
+	MAX(TO_TIMESTAMP(log_line ->> 'time', 'YYYY-MM-DD"T"HH24:MI:SS')::TIMESTAMP) as session_stop_time,
+	MIN(TO_TIMESTAMP(log_line ->> 'time', 'YYYY-MM-DD"T"HH24:MI:SS')::TIMESTAMP) as session_start_time,
+	age(MAX(TO_TIMESTAMP(log_line ->> 'time', 'YYYY-MM-DD"T"HH24:MI:SS')::TIMESTAMP), MIN(TO_TIMESTAMP(log_line ->> 'time', 'YYYY-MM-DD"T"HH24:MI:SS')::TIMESTAMP))
+from logs
+where log_line ->> 'session' != 'null' and log_line ->> 'session' != ''
+group by session_user_id, session_name
+order by session_stop_time desc
+
+# User time on course
+select durationTable.session_user_id, SUM(durationTable.session_duration) as time_at_course from (
+	select
+		log_line #>> '{context, user_id}' as session_user_id,
+		log_line -> 'session' as session_name,
+		age(MAX(TO_TIMESTAMP(log_line ->> 'time', 'YYYY-MM-DD"T"HH24:MI:SS')::TIMESTAMP), MIN(TO_TIMESTAMP(log_line ->> 'time', 'YYYY-MM-DD"T"HH24:MI:SS')::TIMESTAMP)) as session_duration
+	from logs
+	where log_line ->> 'session' != 'null' and log_line ->> 'session' != ''
+	group by session_user_id, session_name
+) durationTable
+group by durationTable.session_user_id
+order by time_at_course desc
+
+# Distribution of user time per day, requires user id input as output huge enough by itself
+select durationTable.session_user_id, durationTable.session_date, SUM(durationTable.session_duration) as time_at_course from (
+	select
+		log_line #>> '{context, user_id}' as session_user_id,
+		log_line -> 'session' as session_name,
+		MAX(TO_DATE(log_line ->> 'time', 'YYYY-MM-DD"T"HH24:MI:SS')::DATE) as session_date,
+		age(MAX(TO_TIMESTAMP(log_line ->> 'time', 'YYYY-MM-DD"T"HH24:MI:SS')::TIMESTAMP), MIN(TO_TIMESTAMP(log_line ->> 'time', 'YYYY-MM-DD"T"HH24:MI:SS')::TIMESTAMP)) as session_duration
+	from logs
+	where log_line ->> 'session' != 'null' and log_line ->> 'session' != ''
+	where log_line #>> '{context, user_id}' = 'xxxxx'
+	group by session_user_id, session_name
+) durationTable
+group by durationTable.session_user_id, durationTable.session_date
+order by time_at_course desc
+
+# построить распределение времени сессии по дням
+# построить обшее время человека на курсе

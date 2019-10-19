@@ -30,6 +30,7 @@ def calculate_video_start_times(connection):
 
 
 def write_result_to_file(result_file, result):
+    print('Start writing the data to file.')
     with open(result_file, mode='w') as res_file:
         field_names = ['time', 'count']
         result_file_writer = csv.writer(res_file, delimiter=',', quotechar='"', quoting=csv.QUOTE_MINIMAL)
