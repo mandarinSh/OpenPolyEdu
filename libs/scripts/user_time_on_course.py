@@ -9,17 +9,22 @@ from database_services import *
 def calculate_total_user_time_on_course(connection):
     print('Start query execution at ', datetime.datetime.now())
 
-    total_users_time_on_course_query = '''select durationTable.session_user_id, SUM(durationTable.session_duration) as time_at_course from (
-            select
-                log_line #>> '{context, user_id}' as session_user_id,
-                log_line -> 'session' as session_name,
-                age(MAX(TO_TIMESTAMP(log_line ->> 'time', 'YYYY-MM-DD"T"HH24:MI:SS')::TIMESTAMP), MIN(TO_TIMESTAMP(log_line ->> 'time', 'YYYY-MM-DD"T"HH24:MI:SS')::TIMESTAMP)) as session_duration
-            from logs
-            where log_line ->> 'session' != 'null' and log_line ->> 'session' != ''
-            group by session_user_id, session_name
-        ) durationTable
-        group by durationTable.session_user_id
-        order by time_at_course desc'''
+    total_users_time_on_course_query = '''select total_time_per_day.user_id, SUM(total_time_per_day.time_at_session_per_day) as duration from (
+            select durationTable.session_user_id as user_id, durationTable.session_date, SUM(durationTable.session_duration) as time_at_session_per_day from (
+                    select
+                        log_line #>> '{context, user_id}' as session_user_id,
+                        TO_DATE(log_line ->> 'time', 'YYYY-MM-DD"T"HH24:MI:SS')::DATE as session_date,
+                        log_line -> 'session' as session_name,
+                        age(MAX(TO_TIMESTAMP(log_line ->> 'time', 'YYYY-MM-DD"T"HH24:MI:SS')::TIMESTAMP), MIN(TO_TIMESTAMP(log_line ->> 'time', 'YYYY-MM-DD"T"HH24:MI:SS')::TIMESTAMP)) as session_duration
+                    from logs
+                    where log_line ->> 'session' != 'null' and log_line ->> 'session' != ''
+                        group by session_user_id, session_name, session_date
+                ) durationTable
+                group by durationTable.session_user_id, durationTable.session_date
+                order by durationTable.session_date desc
+        ) total_time_per_day
+        group by total_time_per_day.user_id
+        order by duration desc'''
 
     connection.set_isolation_level(ISOLATION_LEVEL_AUTOCOMMIT)
     cursor = connection.cursor()
