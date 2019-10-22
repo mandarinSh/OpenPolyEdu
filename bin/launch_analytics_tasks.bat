@@ -10,7 +10,7 @@ echo   3. Calculate unique user names and ids.
 echo   4. Show page activity on course (total number of visits).
 echo   5. Show page activity on course distributed by day.
 echo   6. Show events distribution per day.
-echo   7. Calculate user time on course.
+echo   7. Calculate total user time on course.
 echo   8. Show amount of video play events per day.
 echo   9. Compare courses launches.
 echo   10. Exit
