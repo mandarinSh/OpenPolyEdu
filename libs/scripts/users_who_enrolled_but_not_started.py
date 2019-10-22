@@ -41,6 +41,7 @@ def calculate_users_who_enrolled_but_not_started(connection):
             GROUP BY user_name, user_id
         ) userNames
         ON userNames.user_id = notStartedUsers.enrolled_but_not_started
+		group by user_name, notStartedUsers.enrolled_but_not_started        
         order by user_name desc'''
 
     connection.set_isolation_level(ISOLATION_LEVEL_AUTOCOMMIT)
@@ -58,7 +59,7 @@ def calculate_users_who_enrolled_but_not_started(connection):
 def write_result_to_file(result_file, result):
     print('Start writing the data to file.')
     with open(result_file,"w") as file:
-        file.write(tabulate(result, headers=['user_name', 'user_id']))
+        file.write(tabulate(result, headers=['user_id', 'user_name']))
 
 
 def main(argv):
