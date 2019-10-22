@@ -77,7 +77,7 @@ def generate_figure(user_time_on_course):
 def write_result_to_file(result_file, result):
     print('Start writing the data to file.')
     with open(result_file,"w") as file:
-        file.write(tabulate(result, headers=['user_name', 'time_on_course']))
+        file.write(tabulate(result, headers=['user_id', 'time_on_course']))
 
 
 def main(argv):

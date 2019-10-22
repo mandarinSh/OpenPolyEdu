@@ -123,6 +123,30 @@ select durationTable.session_user_id, SUM(durationTable.session_duration) as tim
 group by durationTable.session_user_id
 order by time_at_course desc
 
+# User time on coures, but different approach
+select usersAndSessions.user_id, SUM(sessionDurationTable.session_duration) as time_at_course from (
+	select
+		log_line -> 'session' as session_name,
+		age(MAX(TO_TIMESTAMP(log_line ->> 'time', 'YYYY-MM-DD"T"HH24:MI:SS')::TIMESTAMP), MIN(TO_TIMESTAMP(log_line ->> 'time', 'YYYY-MM-DD"T"HH24:MI:SS')::TIMESTAMP)) as session_duration
+	from logs
+	where log_line ->> 'session' != 'null' and log_line ->> 'session' != ''
+	group by session_name
+) sessionDurationTable
+INNER JOIN (
+	select
+		log_line #>> '{context, user_id}' AS user_id,
+		log_line -> 'session' as session_name
+	from logs
+	where log_line #>> '{context, user_id}' != 'null'
+		and log_line #>> '{context, user_id}' != ''
+		and log_line ->> 'session' != 'null'
+		and log_line ->> 'session' != ''
+	group by user_id, session_name
+) usersAndSessions
+ON sessionDurationTable.session_name=usersAndSessions.session_name
+group by usersAndSessions.user_id
+order by time_at_course desc
+
 # Distribution of user time per day, requires user id input as output huge enough by itself
 select durationTable.session_user_id, durationTable.session_date, SUM(durationTable.session_duration) as time_at_course from (
 	select
