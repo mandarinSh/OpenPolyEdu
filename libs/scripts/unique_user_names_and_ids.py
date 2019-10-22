@@ -7,7 +7,10 @@ from database_services import *
 def calculate_users_and_ids(connection):
     print('Start query execution at ', datetime.datetime.now())
 
-    get_unique_users_query = '''select log_line -> 'username' as user_name, log_line #>> '{context, user_id}' AS user_id from logs GROUP BY user_name, user_id order by user_name'''
+    get_unique_users_query = '''select 
+            log_line -> 'username' as user_name, 
+            log_line #>> '{context, user_id}' AS user_id 
+        from logs GROUP BY user_name, user_id order by user_name'''
 
     connection.set_isolation_level(ISOLATION_LEVEL_AUTOCOMMIT)
     cursor = connection.cursor()

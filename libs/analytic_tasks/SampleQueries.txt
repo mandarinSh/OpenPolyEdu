@@ -162,5 +162,12 @@ select durationTable.session_user_id, durationTable.session_date, SUM(durationTa
 group by durationTable.session_user_id, durationTable.session_date
 order by time_at_course desc
 
-# построить распределение времени сессии по дням
-# построить обшее время человека на курсе
+# test names distribution count
+select
+	log_line #>> '{context, module, display_name}' as module_name,
+	TO_DATE(log_line ->> 'time', 'YYYY-MM-DD"T"HH24:MI:SS') as time_run,
+	count(*) as interaction_count
+from logs
+where log_line #>> '{context, module, display_name}' != 'null'
+group by module_name, time_run
+order by interaction_count desc
