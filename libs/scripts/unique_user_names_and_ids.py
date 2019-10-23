@@ -9,7 +9,7 @@ def calculate_users_and_ids(connection):
 
     # It is required to obtain list of unique ids first and then join it with names, because
     # it is possible, that EDX does not generate 'name' for some events
-    get_unique_users_query = '''select uniqueUserIds.user_id as user_id, userAndIDs.user_name as user_name from (
+    get_unique_users_query = '''select userAndIDs.user_name as user_name, uniqueUserIds.user_id as user_id from (
             select 
                 log_line #>> '{context, user_id}' AS user_id 
             from logs 
@@ -24,7 +24,7 @@ def calculate_users_and_ids(connection):
             GROUP BY user_id, user_name
         ) userAndIDs
         ON uniqueUserIds.user_id = userAndIDs.user_id
-        order by user_id'''
+        order by user_name'''
 
     connection.set_isolation_level(ISOLATION_LEVEL_AUTOCOMMIT)
     cursor = connection.cursor()

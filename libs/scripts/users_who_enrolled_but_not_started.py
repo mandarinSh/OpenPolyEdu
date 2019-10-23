@@ -34,15 +34,25 @@ def calculate_users_who_enrolled_but_not_started(connection):
             where userTimeOnCourse.user_id is null or duration = '00:00:00'
         ) notStartedUsers
         INNER JOIN (
-            select 
-                log_line -> 'username' as user_name, 
-                log_line #>> '{context, user_id}' AS user_id 
-            from logs 
-            GROUP BY user_name, user_id
+            select uniqueUserIds.user_id as user_id, userAndIDs.user_name as user_name from (
+                select 
+                    log_line #>> '{context, user_id}' AS user_id 
+                from logs 
+                GROUP BY user_id 
+            ) uniqueUserIds
+            LEFT JOIN (
+                select 
+                    log_line -> 'username' as user_name,
+                    log_line #>> '{context, user_id}' AS user_id 
+                from logs 
+                where log_line -> 'username' != 'null' and log_line -> 'username' != '""' and log_line -> 'username' is not null
+                GROUP BY user_id, user_name
+            ) userAndIDs
+            ON uniqueUserIds.user_id = userAndIDs.user_id
         ) userNames
         ON userNames.user_id = notStartedUsers.enrolled_but_not_started
-		group by user_name, notStartedUsers.enrolled_but_not_started        
-        order by user_name desc'''
+        group by user_name, notStartedUsers.enrolled_but_not_started        
+        order by user_name desc NULLS LAST'''
 
     connection.set_isolation_level(ISOLATION_LEVEL_AUTOCOMMIT)
     cursor = connection.cursor()
