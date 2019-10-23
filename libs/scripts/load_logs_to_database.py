@@ -12,6 +12,26 @@ def create_logs_table(connection):
     print("Table logs has been created")
 
 
+def create_url_decode_function(connection):
+    create_function_query = '''CREATE OR REPLACE FUNCTION url_decode(input text) RETURNS text
+        LANGUAGE plpgsql IMMUTABLE STRICT AS $$
+        DECLARE
+         bin bytea = '';
+         byte text;
+        BEGIN
+         FOR byte IN (select (regexp_matches(input, '(%..|.)', 'g'))[1]) LOOP
+           IF length(byte) = 3 THEN
+             bin = bin || decode(substring(byte, 2, 2), 'hex');
+           ELSE
+             bin = bin || byte::bytea;
+           END IF;
+         END LOOP;
+         RETURN convert_from(bin, 'utf8');
+        END
+        $$;'''
+    execute_query(connection, create_function_query)
+    print("Function for decoding url has been created")
+
 def insert_lines(cur, lines_array):
     records_list_template = ','.join(['(%s)'] * len(lines_array))
     insert_query = 'INSERT INTO logs(log_line) VALUES {}'.format(records_list_template)
@@ -55,6 +75,7 @@ def main(argv):
     # The connection is used to create a table in analytics database
     connection = open_db_connection(database_name, user_name)
     create_logs_table(connection)
+    create_url_decode_function(connection)
     ingest_logs(connection, openedu_log_file)
     close_db_connection(connection)
 

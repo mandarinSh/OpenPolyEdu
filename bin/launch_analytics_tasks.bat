@@ -19,9 +19,10 @@ echo Utility analytics:
 echo   9. Calculate unique user names.
 echo   10. Calculate unique event names.
 echo   11. Calculate unique user names and ids.
-echo   12. Show amount of video play events per day.
-echo   13. Compare courses launches.
-echo   14. Exit
+echo   12. Calculate URLs and names mapping
+echo   13. Show amount of video play events per day.
+echo   14. Compare courses launches.
+echo   15. Exit
 echo.
 echo   NOTE: the result of analytics can be found in "result" directory or the browser will be opened automatically.
 echo.
@@ -62,13 +63,16 @@ IF "%TASK_TO_EXECUTE%"=="1" (
   call %PYTHON_HOME%\python.exe %PY_SCRIPT_DIR%unique_user_names_and_ids.py %DATABASE_NAME% %USER_NAME% %RESULT_DIR%unique_user_names_and_ids.txt
   goto enterTaskName
 ) ELSE IF "%TASK_TO_EXECUTE%"=="12" (
-  call %PYTHON_HOME%\python.exe %PY_SCRIPT_DIR%play_video_count_per_day.py %DATABASE_NAME% %USER_NAME% %RESULT_DIR%play_video_count_per_day.csv
+  call %PYTHON_HOME%\python.exe %PY_SCRIPT_DIR%section_urls_and_names.py %DATABASE_NAME% %USER_NAME% %RESULT_DIR%section_urls_and_names.csv
   goto enterTaskName
 ) ELSE IF "%TASK_TO_EXECUTE%"=="13" (
+   call %PYTHON_HOME%\python.exe %PY_SCRIPT_DIR%play_video_count_per_day.py %DATABASE_NAME% %USER_NAME% %RESULT_DIR%play_video_count_per_day.csv
+   goto enterTaskName
+) ELSE IF "%TASK_TO_EXECUTE%"=="14" (
    @rem TODO: Put here invocation of the required implementation '..\libs\analytic_tasks'
    echo TODO
    goto enterTaskName
-) ELSE IF "%TASK_TO_EXECUTE%"=="14" (
+) ELSE IF "%TASK_TO_EXECUTE%"=="15" (
    echo Thank you for using the tool!
    goto end
 ) ELSE (
