@@ -122,7 +122,8 @@ def generate_figure(enrolled_but_not_started_users):
                     color="#7f7f7f"
                 )
             )
-        ))
+        )
+    )
 
     print("Opening browser...")
     fig.show()
