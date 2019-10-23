@@ -73,7 +73,8 @@ The below log line shows the even generated for the user action, when starting p
 ```
 
 ## Relative works
- - Out-of-the-box [Edx analytics](https://edx.readthedocs.io/projects/edx-data-analytics-api/en/latest/index.html) 
+ - Out-of-the-box [Edx analytics](https://edx.readthedocs.io/projects/edx-data-analytics-api/en/latest/index.html)
+ - [Towards the Development of a Learning Analytics extension in Open edX](https://www.researchgate.net/publication/280099474_Towards_the_Development_of_a_Learning_Analytics_extension_in_Open_edX) 
  - Research of one of [university](http://docs.lms.tpu.ru/projects/devdata/ru/latest/front_matter/index.html)
  
 
