@@ -1,4 +1,5 @@
 import sys
+import re
 import datetime
 from urllib.parse import unquote
 import plotly.graph_objects as go
@@ -31,9 +32,48 @@ def calculate_user_way_of_moving(connection, user_id):
     return user_way_on_course
 
 
-def write_result_to_file(result_file, result):
+def calculate_urls_and_names_mapping(connection):
+    print('Start query execution at ', datetime.datetime.now())
+
+    get_urls_and_names_mapping_query = '''select uniqueUrls.target_url as target_url, urlsAndIDs.target_name as target_name from (
+            select 
+                url_decode((log_line ->> 'event')::json ->> 'target_url') as target_url
+            from logs
+			where 
+				log_line ->> 'event_type' LIKE '%link_clicked' or 
+				log_line ->> 'event_type' LIKE '%selected'
+            GROUP BY target_url 
+        ) uniqueUrls
+        LEFT JOIN (
+            select 
+				url_decode((log_line ->> 'event')::json ->> 'target_url') as target_url,
+				(log_line ->> 'event')::json ->> 'target_name' as target_name
+            from logs 
+            where 
+				(log_line ->> 'event_type' LIKE '%link_clicked' or 
+				log_line ->> 'event_type' LIKE '%selected')
+				and (log_line ->> 'event')::json ->> 'target_name' is not null
+            GROUP BY target_name, target_url
+        ) urlsAndIDs
+        ON uniqueUrls.target_url = urlsAndIDs.target_url
+		where uniqueUrls.target_url is not null
+        order by target_name'''
+
+    connection.set_isolation_level(ISOLATION_LEVEL_AUTOCOMMIT)
+    cursor = connection.cursor()
+    cursor.execute(get_urls_and_names_mapping_query)
+    urls_and_names_mapping = cursor.fetchall()
+    cursor.close()
+    connection.commit()
+
+    print('End query execution at ', datetime.datetime.now())
+    print("Urls and names mapping has been calculated")
+    return urls_and_names_mapping
+
+
+def write_result_to_file(result_file, result, urls_and_names_mapping):
     print('Start writing the data to file.')
-    with open(result_file, mode='w') as res_file:
+    with open(result_file, mode='w', encoding="utf-8") as res_file:
         field_names = ['time_access', 'page_url']
         result_file_writer = csv.writer(res_file, delimiter=',', quotechar='"', quoting=csv.QUOTE_MINIMAL)
         result_file_writer.writerow(field_names)
@@ -52,16 +92,36 @@ def process_urls(url):
     if url.endswith('/'):
         url = url[:-1]
 
+    m = re.search(r'/\d$', url)
+    if m is not None:
+        url = url[:-2]
+
     return url
 
 
-def generate_figure(user_way_on_course, user_id):
+def find_alias(url, urls_and_names_mapping):
+    for url_mapping in urls_and_names_mapping:
+        if url_mapping[0] == url + '/':
+            return url_mapping[1]
+    return None
+
+
+def generate_figure(user_way_on_course, urls_and_names_mapping, user_id):
     x_axis = []
     y_axis = []
+
+    y_ticktext = []
     for user in user_way_on_course:
         if user[0]:
             x_axis.append(user[0])
-            y_axis.append(process_urls(user[1]))
+            cleaned_url = process_urls(user[1])
+            y_axis.append(cleaned_url)
+
+            alias = find_alias(cleaned_url, urls_and_names_mapping)
+            if alias:
+                y_ticktext.append(alias)
+            else:
+                y_ticktext.append(cleaned_url)
 
     fig = go.Figure(data=go.Scatter(x=x_axis, y=y_axis, line=dict(width=5, color='#b22222'),
                                     mode='lines+markers',
@@ -69,7 +129,7 @@ def generate_figure(user_way_on_course, user_id):
 
     fig.update_layout(
         height=1000,
-        width=20000,
+        width=10000,
         title_text="Way of moving on course per day of the user with id '" + str(user_id) + "'",
         xaxis=go.layout.XAxis(
             title=go.layout.xaxis.Title(
@@ -79,7 +139,8 @@ def generate_figure(user_way_on_course, user_id):
                     size=18,
                     color="#7f7f7f"
                 )
-            )
+            ),
+            tickmode='array'
         ),
         yaxis=go.layout.YAxis(
             title=go.layout.yaxis.Title(
@@ -91,6 +152,11 @@ def generate_figure(user_way_on_course, user_id):
                 )
             )
         )
+    )
+
+    fig.update_yaxes(
+        ticktext=y_ticktext,
+        tickvals=y_axis
     )
 
     print("Opening browser...")
@@ -114,8 +180,9 @@ def main(argv):
 
     connection = open_db_connection(database_name, user_name)
     user_way_on_course = calculate_user_way_of_moving(connection, user_id)
-    write_result_to_file(result_file, user_way_on_course)
-    generate_figure(user_way_on_course, user_id)
+    urls_and_names_mapping = calculate_urls_and_names_mapping(connection)
+    write_result_to_file(result_file, user_way_on_course, urls_and_names_mapping)
+    generate_figure(user_way_on_course, urls_and_names_mapping, user_id)
     print('The analytics result can be found at ', result_file)
     close_db_connection(connection)
 
