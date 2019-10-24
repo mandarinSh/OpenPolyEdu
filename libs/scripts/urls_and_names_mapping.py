@@ -8,18 +8,28 @@ from database_services import *
 def calculate_urls_and_names_mapping(connection):
     print('Start query execution at ', datetime.datetime.now())
 
-    get_urls_and_names_mapping_query = '''select
-            url_decode((log_line ->> 'event')::json ->> 'target_url') as target_url,
-            (log_line ->> 'event')::json ->> 'target_name' as target_name		
-        from logs
-        where 
-            (log_line ->> 'event_type' LIKE '%link_clicked' or 
-            log_line ->> 'event_type' LIKE '%selected' or 
-            log_line ->> 'event_type' LIKE '%next_selected' or 
-            log_line ->> 'event_type' LIKE '%next_selected' or 
-            log_line ->> 'event_type' LIKE '%previous_selected' or 
-            log_line ->> 'event_type' LIKE '%tab_selected')
-        group by target_url, target_name
+    get_urls_and_names_mapping_query = '''select urlsAndIDs.target_name as target_name, uniqueUrls.target_url as target_url from (
+            select 
+                url_decode((log_line ->> 'event')::json ->> 'target_url') as target_url
+            from logs
+			where 
+				log_line ->> 'event_type' LIKE '%link_clicked' or 
+				log_line ->> 'event_type' LIKE '%selected'
+            GROUP BY target_url 
+        ) uniqueUrls
+        LEFT JOIN (
+            select 
+				url_decode((log_line ->> 'event')::json ->> 'target_url') as target_url,
+				(log_line ->> 'event')::json ->> 'target_name' as target_name
+            from logs 
+            where 
+				(log_line ->> 'event_type' LIKE '%link_clicked' or 
+				log_line ->> 'event_type' LIKE '%selected')
+				and (log_line ->> 'event')::json ->> 'target_name' is not null
+            GROUP BY target_name, target_url
+        ) urlsAndIDs
+        ON uniqueUrls.target_url = urlsAndIDs.target_url
+		where uniqueUrls.target_url is not null
         order by target_name'''
 
     connection.set_isolation_level(ISOLATION_LEVEL_AUTOCOMMIT)
@@ -37,7 +47,7 @@ def calculate_urls_and_names_mapping(connection):
 def write_result_to_file(result_file, result):
     print('Start writing the data to file.')
     with codecs.open(result_file,"w", "utf-8") as file:
-        file.write(tabulate(result, headers=['target_url', 'target_name']))
+        file.write(tabulate(result, headers=['target_name', 'target_url']))
 
 
 def main(argv):

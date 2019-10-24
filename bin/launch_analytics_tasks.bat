@@ -63,7 +63,7 @@ IF "%TASK_TO_EXECUTE%"=="1" (
   call %PYTHON_HOME%\python.exe %PY_SCRIPT_DIR%unique_user_names_and_ids.py %DATABASE_NAME% %USER_NAME% %RESULT_DIR%unique_user_names_and_ids.txt
   goto enterTaskName
 ) ELSE IF "%TASK_TO_EXECUTE%"=="12" (
-  call %PYTHON_HOME%\python.exe %PY_SCRIPT_DIR%section_urls_and_names.py %DATABASE_NAME% %USER_NAME% %RESULT_DIR%section_urls_and_names.csv
+  call %PYTHON_HOME%\python.exe %PY_SCRIPT_DIR%urls_and_names_mapping.py %DATABASE_NAME% %USER_NAME% %RESULT_DIR%urls_and_names_mapping.csv
   goto enterTaskName
 ) ELSE IF "%TASK_TO_EXECUTE%"=="13" (
    call %PYTHON_HOME%\python.exe %PY_SCRIPT_DIR%play_video_count_per_day.py %DATABASE_NAME% %USER_NAME% %RESULT_DIR%play_video_count_per_day.csv
