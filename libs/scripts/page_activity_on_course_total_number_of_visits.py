@@ -125,8 +125,8 @@ def generate_figure(activity_distribution, urls_and_names_mapping):
 
     fig.update_layout(title_text='Amount of interactions with the course pages',
                       autosize=False,
-                      width=3000,
-                      height=20*len(x_axis))
+                      width=5000,
+                      height=30*len(x_axis))
     print("Opening browser...")
     fig.show()
 
