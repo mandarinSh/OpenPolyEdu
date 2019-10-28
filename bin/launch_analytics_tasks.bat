@@ -21,8 +21,9 @@ echo   10. Calculate unique event names.
 echo   11. Calculate unique user names and ids.
 echo   12. Calculate URLs and names mapping
 echo   13. Show amount of video play events per day.
-echo   14. Compare courses launches.
-echo   15. Exit
+echo   14. Get count of each event /for every user.
+echo   15. Pass.
+echo   16. Exit
 echo.
 echo   NOTE: the result of analytics can be found in "result" directory or the browser will be opened automatically.
 echo.
@@ -69,10 +70,13 @@ IF "%TASK_TO_EXECUTE%"=="1" (
    call %PYTHON_HOME%\python.exe %PY_SCRIPT_DIR%play_video_count_per_day.py %DATABASE_NAME% %USER_NAME% %RESULT_DIR%play_video_count_per_day.csv
    goto enterTaskName
 ) ELSE IF "%TASK_TO_EXECUTE%"=="14" (
+   call %PYTHON_HOME%\python.exe %PY_SCRIPT_DIR%unique_user_names_ids_events.py %DATABASE_NAME% %USER_NAME% %RESULT_DIR%unique_user_names_ids_events.csv
+   goto enterTaskName
+) ELSE IF "%TASK_TO_EXECUTE%"=="15" (
    @rem TODO: Put here invocation of the required implementation '..\libs\analytic_tasks'
    echo TODO
    goto enterTaskName
-) ELSE IF "%TASK_TO_EXECUTE%"=="15" (
+) ELSE IF "%TASK_TO_EXECUTE%"=="16" (
    echo Thank you for using the tool!
    goto end
 ) ELSE (
