@@ -1,6 +1,7 @@
 import datetime
 import json
 import psycopg2
+import sys
 
 
 # Gets datetime object from log 'time' string
@@ -10,20 +11,13 @@ def parse_datetime(log_timestamp):
     time = dt[1].split(".")[0].split(":")
     return datetime.datetime(int(date[0]), int(date[1]), int(date[2]), hour=int(time[0]), minute=int(time[1]), second=int(time[2]))
 
-
-# Prints total time of video-watching for every user (as a table) into console
-def print_result_to_stdout(user_times):
-    print("username | time (sec)")
-    for username in user_times:
-        print(username, "|", user_times[username].total_seconds())
-
-# Prints results to the system-logs directory
-def print_result_to_system_logs(user_times):
-    log_path = "../../system-logs/get_video_watching_durations.log"
+# Prints results to the result directory
+def print_result(user_times, res_dir):
+    log_path = res_dir
     log_fh = open(log_path, "w")
-    log_fh.write("username | time (sec)\n")
+    log_fh.write("username,time (sec)\n")
     for username in user_times:
-        log_fh.write(username + " | " +  str(user_times[username].total_seconds()) + "\n")
+        log_fh.write(username + "," +  str(user_times[username].total_seconds()) + "\n")
     log_fh.close()
 
 
@@ -36,7 +30,7 @@ def calculate_times_for_users(play_pause_events):
     user_played_times = dict()
 
     for event in play_pause_events:
-
+        num_events += 1
         event_type = event[0]
         username = event[1]
         time = event[2]
@@ -58,35 +52,38 @@ def calculate_times_for_users(play_pause_events):
 
 
 # Doing the analytic task (get users' video-watching durations)
-def do_task(db_params):
+def do_task(db_params, res_dir):
 
     # Connecting to DB
     con = psycopg2.connect(
       database=db_params['database'],
       user=db_params['user'],
-      password=db_params['password'],
+	  password=db_params['password'],
       host=db_params['host'], 
     )
     cur = con.cursor()
 
     # Get all play and pause events from video_events table
-    cur.execute("SELECT event_type, username, time FROM video_events WHERE event_type='pause_video' OR event_type='play_video'")
+	
+    cur.execute(''' SELECT log_line ->> 'event_type' as event_t, log_line -> 'username' as username, log_line -> 'time' as time 
+	                FROM logs WHERE log_line ->> 'event_type' = 'pause_video' OR 
+					log_line ->> 'event_type' = 'play_video' ''')
+	
     # Get dict of users and their total video watching time values
     # Time is represented as datetime.timedelta type
     user_times = calculate_times_for_users(cur.fetchall())
 
     # Print results of analytics task as table
-    print_result_to_stdout(user_times)
-    print_result_to_system_logs(user_times)
+    #print_result_to_stdout(user_times)
+    print_result(user_times, res_dir)
 
     cur.close()
     con.close()
 
 
-postgres_params = { 'database':"postgres",
-      'user':"postgres",
-      'password':"postgres",
-      'host':"127.0.0.1" }
+postgres_params = { 'database': sys.argv[1],
+      'user': sys.argv[2],
+	  'password': "openedu",
+      'host': "127.0.0.1" }
 
-do_task(postgres_params)
-
+do_task(postgres_params, sys.argv[3])
