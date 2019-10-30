@@ -79,7 +79,9 @@ The below log line shows the even generated for the user action, when starting p
  
 
 # Development 
-TBD
+Code-style for Python scripts is defined by PEP 8 standard. It may be found on the official website: https://www.python.org/dev/peps/pep-0008/
+
+Also PEP8-codestyle auto-check may be plugged into the IDE (e.g. PyCharm).
 
 ## Test environment
 Nikita needs to be asked about VM IP and creds
