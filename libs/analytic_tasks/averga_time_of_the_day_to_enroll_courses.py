@@ -50,7 +50,9 @@ enrolling event.
 def main(argv):
     print('Start calculating page activity on course distributed by 
 day.')
-
+    database_name = argv[1]
+    user_name = argv[2]
+    
     connection = open_db_connection(database_name, user_name)
     average_time_to_enroll_any_course = 
 get_average_time_to_enroll_any_course(connection)
