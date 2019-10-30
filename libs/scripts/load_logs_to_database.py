@@ -12,6 +12,21 @@ def create_logs_table(connection):
     print("Table logs has been created")
 
 
+def create_unicode_encode_function(connection):
+    create_function_query = """CREATE OR REPLACE FUNCTION public.unescape(text)
+                                RETURNS text
+                                LANGUAGE plpgsql
+                                AS $function$
+                                DECLARE result text;
+                                BEGIN
+                                  EXECUTE format('SELECT e''%s''', $1) INTO result;
+                                  RETURN result;
+                                END;
+                                $function$;"""
+    execute_query(connection, create_function_query)
+    print("Function for encoding Unicode symbols has been created")
+
+
 def create_url_decode_function(connection):
     create_function_query = '''CREATE OR REPLACE FUNCTION url_decode(input text) RETURNS text
         LANGUAGE plpgsql IMMUTABLE STRICT AS $$
