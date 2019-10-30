@@ -6,9 +6,10 @@ from urllib.parse import unquote
 from database_services import *
 
 
-"""Retrieves unique course IDs from the connected database.
-@param connection - connection to the target database;
-@returns list of unique courses' IDs;
+"""
+* Retrieves unique course IDs from the connected database.
+* @param connection - connection to the target database;
+* @returns list of unique courses' IDs;
 """
 def get_unique_course_ids(connection):
     unique_course_id_query = '''
@@ -46,9 +47,10 @@ def get_enrollment_distribution(connection):
     connection.commit()
     return enrollment_distribution_course_id_and_time
 
-"""Retrieves average time to enroll any course.
-@param connection - connection to the target database;
-@returns average time to enroll any course;
+"""
+* Retrieves average time to enroll any course.
+* @param connection - connection to the target database;
+ *@returns average time to enroll any course;
 """
 def get_average_time_to_enroll_any_course(connection):
     # NOTE: Getting average time to enroll the course based on every enrolling event.
@@ -67,6 +69,18 @@ def get_average_time_to_enroll_any_course(connection):
     cursor.close()
     connection.commit()
     return average_time_to_enroll
+
+def generate_enrollment_distribution_figure(enrollment_distribution):
+    enrollment_dict = dict()
+    for enrollment_event in enrollment_distribution:
+        course_id = enrollment_event[0]
+        time_to_enroll_course = enrollment_dict.get(course_id)
+        if not time_to_enroll_course:
+            time_to_enroll_course = []
+        time_to_enroll_course.append(enrollment_event[1])
+        enrollment_dict[course_id] = time_to_enroll_course
+    ## TODO: Determine type of chart to be generated.
+
 
 def main(argv):
     print('Start calculating page activity on course distributed by 
