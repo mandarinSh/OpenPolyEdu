@@ -23,19 +23,41 @@ def get_unique_course_ids(connection):
     connection.commit()
     return unique_course_ids
 
+
+""" 
+* Fetches distribution of the courses' enrollment.
+* @returns map - course ID and enrollment time. Not that course ID is not distinct.
+"""
+def get_enrollment_distribution(connection):
+    enrollment_distribution_sql_request = ''' 
+        SELECT (log_line ->> 'context')::json ->> 'course_id' AS course_identifier,
+            to_timestamp(log_line ->> 'time', 'YYYY-MM-DD"T"HH24:MI:SS')::TIME time_of_enrollment
+        FROM logs
+        WHERE log_line ->> 'event_type' LIKE '%.activated'
+        GROUP BY course_identifier, time_of_enrollment
+        ORDER BY time_of_enrollment
+    '''
+
+    connection.set_isolation_level(ISOLATION_LEVEL_AUTOCOMMIT)
+    cursor = connection.cursor()
+    cursor.execute(enrollment_distribution_sql_request)
+    enrollment_distribution_course_id_and_time = cursor.fetchall()
+    cursor.close()
+    connection.commit()
+    return enrollment_distribution_course_id_and_time
+
 """Retrieves average time to enroll any course.
 @param connection - connection to the target database;
 @returns average time to enroll any course;
 """
 def get_average_time_to_enroll_any_course(connection):
-    # NOTE: Getting average time to enroll the course based on every 
-enrolling event.
+    # NOTE: Getting average time to enroll the course based on every enrolling event.
     total_average_time_to_enroll_course = '''
-    SELECT enrolling_events.target_time from (
-	    SELECT avg(to_timestamp(log_line ->> 'time', 'YYYY-MM-DD"T"HH24:MI:SS')::TIME) as target_time
-	    FROM logs 
-	    WHERE log_line ->> 'event_type' LIKE '%.activated'
-	) enrolling_events
+        SELECT enrolling_events.target_time from (
+            SELECT avg(to_timestamp(log_line ->> 'time', 'YYYY-MM-DD"T"HH24:MI:SS')::TIME) as target_time
+            FROM logs 
+            WHERE log_line ->> 'event_type' LIKE '%.activated'
+        ) enrolling_events
     '''
     
     connection.set_isolation_level(ISOLATION_LEVEL_AUTOCOMMIT)
