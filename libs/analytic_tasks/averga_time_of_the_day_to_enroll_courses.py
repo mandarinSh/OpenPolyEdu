@@ -11,10 +11,10 @@ from database_services import *
 @returns list of unique courses' IDs;
 """
 def get_unique_course_ids(connection):
-    unique_course_id_query = '''select DISTINCT (log_line ->> 
-'context')::json ->> 'course_id' AS course_identifier from logs order by 
-course_identifier
-        '''
+    unique_course_id_query = '''
+    SELECT DISTINCT (log_line ->> 'context')::json ->> 'course_id' AS course_identifier 
+    FRO, logs PRDER BY course_identifier
+    '''
     connection.set_isolation_level(ISOLATION_LEVEL_AUTOCOMMIT)
     cursor = connection.cursor()
     cursor.execute(unique_course_id_query)
@@ -31,13 +31,12 @@ def get_average_time_to_enroll_any_course(connection):
     # NOTE: Getting average time to enroll the course based on every 
 enrolling event.
     total_average_time_to_enroll_course = '''
-      select enrolling_events.target_time from (
-	select avg(to_timestamp(log_line ->> 'time', 
-'YYYY-MM-DD"T"HH24:MI:SS')::TIME) as target_time
-	from logs 
-	where log_line ->> 'event_type' LIKE '%.activated'
+    SELECT enrolling_events.target_time from (
+	    SELECT avg(to_timestamp(log_line ->> 'time', 'YYYY-MM-DD"T"HH24:MI:SS')::TIME) as target_time
+	    FROM logs 
+	    WHERE log_line ->> 'event_type' LIKE '%.activated'
 	) enrolling_events
-     '''
+    '''
     
     connection.set_isolation_level(ISOLATION_LEVEL_AUTOCOMMIT)
     cursor = connection.cursor()
@@ -52,7 +51,7 @@ def main(argv):
 day.')
     database_name = argv[1]
     user_name = argv[2]
-    
+
     connection = open_db_connection(database_name, user_name)
     average_time_to_enroll_any_course = 
 get_average_time_to_enroll_any_course(connection)
