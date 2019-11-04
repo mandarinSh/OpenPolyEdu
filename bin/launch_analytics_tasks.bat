@@ -22,8 +22,10 @@ echo   11. Calculate unique user names and ids.
 echo   12. Calculate URLs and names mapping
 echo   13. Show amount of video play events per day.
 echo   14. Compare courses launches.
-echo   15. Calculate total video watching time on course for users.
-echo   16. Exit
+echo   15. Show amount of unique pdfs views.
+echo   16. Show amount of unique pdfs scrolling.
+echo   17. Show words from pdf search field.
+echo   18. Exit
 echo.
 echo   NOTE: the result of analytics can be found in "result" directory or the browser will be opened automatically.
 echo.
@@ -74,9 +76,16 @@ IF "%TASK_TO_EXECUTE%"=="1" (
    echo TODO
    goto enterTaskName
 ) ELSE IF "%TASK_TO_EXECUTE%"=="15" (
-   call %PYTHON_HOME%\python.exe %PY_SCRIPT_DIR%get_video_watching_durations.py %DATABASE_NAME% %USER_NAME% %RESULT_DIR%get_video_watching_durations.csv
+   call %PYTHON_HOME%\python.exe %PY_SCRIPT_DIR%unique_views_of_available_pdf.py %DATABASE_NAME% %USER_NAME% %RESULT_DIR%unique_views_of_available_pdf.csv
    goto enterTaskName
 ) ELSE IF "%TASK_TO_EXECUTE%"=="16" (
+   call %PYTHON_HOME%\python.exe %PY_SCRIPT_DIR%unique_scrolling_of_available_pdf.py %DATABASE_NAME% %USER_NAME% %RESULT_DIR%unique_scrolling_of_available_pdf.csv
+   goto enterTaskName
+) ELSE IF "%TASK_TO_EXECUTE%"=="17" (
+   call %PYTHON_HOME%\python.exe %PY_SCRIPT_DIR%words_from_pdf_search.py %DATABASE_NAME% %USER_NAME% %RESULT_DIR%words_from_pdf_search.csv
+   goto enterTaskName
+) ELSE IF "%TASK_TO_EXECUTE%"=="18" (
+
    echo Thank you for using the tool!
    goto end
 ) ELSE (

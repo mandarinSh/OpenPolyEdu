@@ -32,6 +32,7 @@ def create_url_decode_function(connection):
     execute_query(connection, create_function_query)
     print("Function for decoding url has been created")
 
+
 def insert_lines(cur, lines_array):
     records_list_template = ','.join(['(%s)'] * len(lines_array))
     insert_query = 'INSERT INTO logs(log_line) VALUES {}'.format(records_list_template)
