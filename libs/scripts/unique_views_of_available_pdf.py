@@ -30,7 +30,7 @@ def unique_views_of_available_pdf(connection):
 def write_result_to_file(result_file, result):
     print('Start writing the data to file.')
     with open(result_file, mode='w', encoding='utf-8') as res_file:
-        field_names = ['pdf', 'views amount']
+        field_names = ['pdf name', 'views amount']
         result_file_writer = csv.writer(res_file, delimiter=',', quotechar='"', quoting=csv.QUOTE_MINIMAL)
         result_file_writer.writerow(field_names)
         for res in result:
