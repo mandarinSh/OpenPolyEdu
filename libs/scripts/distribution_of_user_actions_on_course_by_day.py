@@ -54,7 +54,7 @@ def generate_figure(event_distribution, user_id):
     events_dict = dict()
     for event in event_distribution:
         event_name = event[0]
-        dates = events_dict.get(event_name);
+        dates = events_dict.get(event_name)
         if not dates:
             dates = []
         dates.append([event[1], event[2]])
