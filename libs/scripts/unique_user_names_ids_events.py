@@ -27,30 +27,15 @@ def get_all_pages_names(connection):
 
     print('End query execution at ', datetime.datetime.now())
     print("Users and ids has been calculated")
+    for name in page_names:
+        print(name[0], '\n')
     return page_names
 
 
 def calculate_users_and_ids(connection):
     print('Start query execution at ', datetime.datetime.now())
 
-    # This query can be used to get usernames, ids, their counts of events,
-    # sessions, pages visited (but not sure it is correct)
-    get_unique_users_query = '''select 
-				log_line -> 'username' as user_name,
-				log_line #>> '{context, user_id}' AS user_id,
-				count (*) as e_count,
-				count (distinct log_line -> 'session') as sessions_count,
-				count (distinct log_line -> 'page') as pages_count
-				
-			from logs
-			where log_line -> 'event' != '""' 
-				and log_line -> 'username' != 'null' 
-				and log_line -> 'username' != '""' 
-				and log_line -> 'username' is not null
-				and log_line -> 'page' != 'null'
-				
-			group by user_id, user_name
-		order by user_name;'''
+    page_names = get_all_pages_names(connection)
 
     # This query is used to get all users and count of each event for every user
     get_unique_events_by_users_query = '''WITH user_events(user_name, user_id, event_type) AS (
@@ -66,7 +51,7 @@ def calculate_users_and_ids(connection):
     SELECT * FROM groupped
     ORDER BY user_name_or_id, event_type;''';
 
-    third_query = '''select 
+    get_users_events_by_page_1 = '''select 
 	user_events.user_name as user_name, 
 	user_events.user_id as user_id,
 	user_events.e_count as total_events_count,
@@ -81,7 +66,8 @@ def calculate_users_and_ids(connection):
 				log_line #>> '{context, user_id}' AS user_id,
 				count (*) as e_count,
 				count (distinct log_line -> 'session') as sessions_count,
-				count (distinct log_line -> 'page') as pages_count
+				count (distinct log_line -> 'page') as pages_count,
+				url_decode((log_line ->> 'event')::json ->> 'target_name') as target_name 
 				
 			from logs
 			where log_line -> 'event' != '""' 
@@ -89,8 +75,11 @@ def calculate_users_and_ids(connection):
 				and log_line -> 'username' != '""' 
 				and log_line -> 'username' is not null
 				and log_line -> 'page' != 'null'
-				
-			group by user_id, user_name
+				and (log_line ->> 'event_type' LIKE '%link_clicked' or 
+					log_line ->> 'event_type' LIKE '%selected')
+				and (log_line ->> 'event')::json ->> '''
+
+    get_users_events_by_page_2 = '''group by user_id, user_name, target_name
 		) user_events
 			
 			left join (
@@ -125,10 +114,14 @@ def calculate_users_and_ids(connection):
  				group by user_id, user_name
  			) speed_change_video_events
  			on user_events.user_id = speed_change_video_events.user_id
-		
+				
 		order by user_name;'''
 
-
+    for name in page_names:
+        get_users_events_by_page_query =\
+            get_users_events_by_page_1 +\
+            name[0] +\
+            get_users_events_by_page_2
 
     connection.set_isolation_level(ISOLATION_LEVEL_AUTOCOMMIT)
     cursor = connection.cursor()
