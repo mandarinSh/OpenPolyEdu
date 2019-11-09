@@ -25,7 +25,8 @@ echo   14. Compare courses launches.
 echo   15. Show amount of unique pdfs views.
 echo   16. Show amount of unique pdfs scrolling.
 echo   17. Show words from pdf search field.
-echo   18. Exit
+echo   18. Calculate video watching durations for users on course
+echo   19. Exit
 echo.
 echo   NOTE: the result of analytics can be found in "result" directory or the browser will be opened automatically.
 echo.
@@ -85,6 +86,9 @@ IF "%TASK_TO_EXECUTE%"=="1" (
    call %PYTHON_HOME%\python.exe %PY_SCRIPT_DIR%words_from_pdf_search.py %DATABASE_NAME% %USER_NAME% %RESULT_DIR%words_from_pdf_search.csv
    goto enterTaskName
 ) ELSE IF "%TASK_TO_EXECUTE%"=="18" (
+   call %PYTHON_HOME%\python.exe %PY_SCRIPT_DIR%get_video_watching_durations.py %DATABASE_NAME% %USER_NAME% %RESULT_DIR%get_video_watching_durations.csv
+   goto enterTaskName
+) ELSE IF "%TASK_TO_EXECUTE%"=="19" (
 
    echo Thank you for using the tool!
    goto end
