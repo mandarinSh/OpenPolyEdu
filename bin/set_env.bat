@@ -1,9 +1,12 @@
-set WORKDIR_PATH=..\workdir\
-set SOFT_PATH=..\soft\
-set PY_SCRIPT_DIR=..\libs\scripts\
-set ANALYTICS_TASKS_DIR=..\libs\analytic_tasks\
-set RESULT_DIR=..\result\
-set INPUT_DIRECTORY=..\input\
+set BINDIR=%~dp0
+set PROJECTDIR=%BINDIR%..
+
+set WORKDIR_PATH=%PROJECTDIR%\workdir\
+set SOFT_PATH=%PROJECTDIR%\soft\
+set PY_SCRIPT_DIR=%PROJECTDIR%\libs\scripts\
+set ANALYTICS_TASKS_DIR=%PROJECTDIR%\libs\analytic_tasks\
+set RESULT_DIR=%PROJECTDIR%\result\
+set INPUT_DIRECTORY=%PROJECTDIR%\input\
 
 set SEV_ZIP_PATH="%SOFT_PATH%\7-Zip\7z.exe"
 set JDK_PATH=%WORKDIR_PATH%installed_soft\jdk
@@ -15,7 +18,7 @@ set POSTGRESQL_HOME=%POSTGRESQL_PATH%\pgsql\bin
 set POSTGRESQL_ADMIN_HOME=%POSTGRESQL_PATH%\pgsql\pgAdmin 4\bin\pgAdmin4.exe
 set PYTHON_HOME=%PYTHON_PATH%
 
-set SYSTEM_LOGS_PATH=..\system_logs\
+set SYSTEM_LOGS_PATH=%PROJECTDIR%\system_logs\
 set LOGS_GENERAL_FILE=%SYSTEM_LOGS_PATH%setup.log
 set LOGS_SOFT_VERSION_FILE=%SYSTEM_LOGS_PATH%installed_soft.log
 set LOGS_POSTGRESQL_FILE=%SYSTEM_LOGS_PATH%postgresql.log
