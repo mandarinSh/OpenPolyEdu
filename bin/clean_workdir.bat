@@ -1,5 +1,5 @@
 @echo off
-call set_env.bat
+call bin\set_env.bat
 
 echo Cleaning the working directory: '%WORKDIR_PATH%'
 rmdir /s /q %WORKDIR_PATH%
