@@ -1,5 +1,5 @@
-set BINDIR=%~dp0
-set PROJECTDIR=%BINDIR%..
+set BIN_DIR=%~dp0
+set PROJECT_DIR=%BINDIR%..
 
 set WORKDIR_PATH=%PROJECTDIR%\workdir\
 set SOFT_PATH=%PROJECTDIR%\soft\
