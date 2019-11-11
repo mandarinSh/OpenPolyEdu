@@ -1,6 +1,6 @@
 @echo off
-set BINDIR=%~dp0
-call %BINDIR%set_env.bat
+set BIN_DIR=%~dp0
+call %BIN_DIR%set_env.bat
 
 echo Cleaning the working directory: '%WORKDIR_PATH%'
 rmdir /s /q %WORKDIR_PATH%
