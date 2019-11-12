@@ -1,5 +1,6 @@
 @echo off
-call set_env.bat
+set BIN_DIR=%~dp0
+call %BIN_DIR%set_env.bat
 
 echo Extracting the JDK to '%JDK_PATH%'
 %SEV_ZIP_PATH% x "%SOFT_PATH%openjdk-11.0.2_windows-x64_bin.zip" -o"%JDK_PATH%"
