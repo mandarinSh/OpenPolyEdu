@@ -8,8 +8,8 @@ from database_services import *
 def print_result(user_times, result_file):
     with open(result_file, "w") as log_fh:
         log_fh.write("username,time(min)\n")
-        for username in user_times:
-            log_fh.write(username + "," + str(user_times[username].total_seconds() // 60) + "\n")
+        for user_time in user_times:
+            log_fh.write(user_time[0] + "," + str(user_time[1].total_seconds() // 60) + "\n")
 
 
 # Calculates total-video-watch-time-durations for every user from DB data
@@ -74,6 +74,8 @@ def execute_analytics_task(result_from_db, result_file):
     # Time is represented as datetime.timedelta type
     user_times = calculate_times_for_users(result_from_db)
 
+    # Sort users by their time video watching descending
+    user_times = sorted(user_times.items(), key=lambda x : x[1], reverse=True)
     # Print results of analytics task as table
     print_result(user_times, result_file)
     print('The analytics result can be found at ', result_file)
