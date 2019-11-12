@@ -1,5 +1,6 @@
 @echo off
-call set_env.bat
+set BIN_DIR=%~dp0
+call %BIN_DIR%set_env.bat
 SETLOCAL
 
 echo Where to take the data from:

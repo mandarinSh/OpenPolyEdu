@@ -1,6 +1,6 @@
 # OpenPolyEdu
 This is a project of Peter the Great St.Petersburg Polytechnic University (SPbPU) students based on course [Big Data](https://openedu.ru/course/spbstu/BIGDATA/).
-More information can be found at presentation: 'docs/2019_OpenEdu_Concept_v2.pptx'
+More information can be found at presentation: `docs/2019_OpenEdu_Concept_v2.pptx`
 
 ## Project goal
 OpenEdu portal provides an information about user activity on the course in the log file.  
@@ -13,25 +13,30 @@ The project goal is to create an infrastructure with set of default analytic tas
 
 ## Pre-requisites
  - Windows 10 (x64)
+ 
+## Technology stack
+ - [Python 3.x](https://www.python.org/)
+ - [PostgreSQL](https://www.postgresql.org/) 
+ - Batch scripts
 
 ## The First run
-In order to start working with project just launch 'bin/startup.bat'.
+In order to start working with project just launch `bin\startup.bat`.
 The script then perform following actions:
- - clean 'workdir', 'system_logs' and 'result'
- - install required software from 'soft' folder
- - copy logs from 'input' folder to 'workdir'
- - create PostgreSQL database and launch server
- - ingest the data to database
- - ask a user on which the analytic task to execute
- - after the analytic task is executed, then the result can be found in 'result' folder
+ - clean `workdir`, `system_logs` and `result` and create them if not exist;
+ - install required software from `soft` folder;
+ - copy logs from `input` folder to `workdir`;
+ - create PostgreSQL database and launch server;
+ - ingest the data to database;
+ - ask a user on which the analytic task to execute;
+ - after the analytic task is executed, then the result can be found in `result` folder.
  
- ## The Second run
+## The Second run
  If the software (Python, its packages and PostgreSQL) is already installed, if the database is already exists and the data is already loaded, then user may use only: 
-  - launch PostgreSQL server with corresponding 'bat' script in the 'bin' directory
-  - launch 'query_analytic_task.bat' script from 'bin' directory' in order to see the results
+  - launch PostgreSQL server with corresponding batch script in the `bin` directory
+  - launch `query_analytic_task.bat` script from 'bin' directory' in order to see the results
   
- ## Custom run
- The scripts in 'bin' folder allows a user flexible operations over the analytic utility. User may run server, load data, clean working directory or run analytic tasks independently. But it is required a bit of experience with the product. 
+## Custom run
+ The scripts in `bin` folder allows a user flexible operations over the analytic utility. User may run server, load data, clean working directory or run analytic tasks independently. But it is required a bit of experience with the product. 
  
 ## OpenEdu logs
 The OpenEdu portal provides an activity log in [JSON](http://json.org/) format.
@@ -84,7 +89,7 @@ Code-style for Python scripts is defined by PEP 8 standard. It may be found on t
 Also PEP8-codestyle auto-check may be plugged into the IDE (e.g. PyCharm).
 
 ## Test environment
-Nikita needs to be asked about VM IP and creds
+> TODO: Nikita needs to be asked about VM IP and creds
 
 ## Useful links
 Edx docs: Installing, Configuring, and Running the Open edX Platform: [Hawthorn Release](https://buildmedia.readthedocs.org/media/pdf/edx-installing-configuring-and-running/open-release-hawthorn.master/edx-installing-configuring-and-running.pdf)
