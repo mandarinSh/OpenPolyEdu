@@ -22,7 +22,8 @@ echo   11. Calculate unique user names and ids.
 echo   12. Calculate URLs and names mapping
 echo   13. Show amount of video play events per day.
 echo   14. Compare courses launches.
-echo   15. Exit
+echo   15. Calculate average time of the day to enroll the course.
+echo   16. Exit
 echo.
 echo   NOTE: the result of analytics can be found in "result" directory or the browser will be opened automatically.
 echo.
@@ -73,6 +74,9 @@ IF "%TASK_TO_EXECUTE%"=="1" (
    echo TODO
    goto enterTaskName
 ) ELSE IF "%TASK_TO_EXECUTE%"=="15" (
+   call %PYTHON_HOME%\python.exe %ANALYTICS_TASKS_DIR%averga_time_of_the_day_to_enroll_courses.py
+   goto enterTaskName
+) ELSE IF "%TASK_TO_EXECUTE%"=="16" (
    echo Thank you for using the tool!
    goto end
 ) ELSE (

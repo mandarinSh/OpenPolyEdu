@@ -70,27 +70,29 @@ def get_average_time_to_enroll_any_course(connection):
     connection.commit()
     return average_time_to_enroll
 
-def generate_enrollment_distribution_figure(enrollment_distribution):
-    enrollment_dict = dict()
-    for enrollment_event in enrollment_distribution:
-        course_id = enrollment_event[0]
-        time_to_enroll_course = enrollment_dict.get(course_id)
-        if not time_to_enroll_course:
-            time_to_enroll_course = []
-        time_to_enroll_course.append(enrollment_event[1])
-        enrollment_dict[course_id] = time_to_enroll_course
-    ## TODO: Determine type of chart to be generated.
+def generate_heatmap(x_values, y_values, z_values):
+    enrollment_distribution_heatmap = go.Figure(data=go.Heatmap(
+        z=z_values,
+        x=x_values,
+        y=y_values)
+    )
+    enrollment_distribution_heatmap.update_layout(
+        title="Course enrollment statistics",
+        xaxis_nticks=10,
+        xaxis_title="Time, minutes",
+        yaxis_title="Amount of peoople enrolled"
+    )
+
+
 
 
 def main(argv):
-    print('Start calculating page activity on course distributed by 
-day.')
+    print('Start calculating page activity on course distributed by day.')
     database_name = argv[1]
     user_name = argv[2]
 
     connection = open_db_connection(database_name, user_name)
-    average_time_to_enroll_any_course = 
-get_average_time_to_enroll_any_course(connection)
+    average_time_to_enroll_any_course = get_average_time_to_enroll_any_course(connection)
     print('Average time of the day to get enrolled into the course is 
 {}'.format(average_time_to_enroll_any_course))
     close_db_connection(connection)
