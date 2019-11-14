@@ -58,13 +58,12 @@ IF "%TASK_TO_EXECUTE%"=="1" (
 ) ELSE IF "%TASK_TO_EXECUTE%"=="8" (
    call %PYTHON_HOME%\python.exe %PY_SCRIPT_DIR%show_user_way.py %DATABASE_NAME% %USER_NAME% %RESULT_DIR%show_user_way.txt
    goto enterTaskName
+) ELSE IF "%TASK_TO_EXECUTE%"=="9" (
+  call %PYTHON_HOME%\python.exe %ANALYTICS_TASKS_DIR%average_time_of_the_day_to_enroll.py %DATABASE_NAME% %USER_NAME% %RESULT_DIR%average_time_of_the_day_to_enroll.csv
+  goto enterTaskName
 ) ELSE IF "%TASK_TO_EXECUTE%"=="10" (
    call %PYTHON_HOME%\python.exe %PY_SCRIPT_DIR%unique_user_names.py %DATABASE_NAME% %USER_NAME% %RESULT_DIR%unique_user_names.txt
    goto enterTaskName
-) ELSE IF "%TASK_TO_EXECUTE%"=="10" (
-   @rem TODO: Add arguments.
-  call %PYTHON_HOME%\python.exe %ANALYTICS_TASKS_DIR%average_time_of_the_day_to_enroll.py
-  goto enterTaskName
 ) ELSE IF "%TASK_TO_EXECUTE%"=="11" (
   call %PYTHON_HOME%\python.exe %PY_SCRIPT_DIR%unique_event_names.py %DATABASE_NAME% %USER_NAME% %RESULT_DIR%unique_event_names.txt
   goto enterTaskName
@@ -81,17 +80,16 @@ IF "%TASK_TO_EXECUTE%"=="1" (
    @rem TODO: Put here invocation of the required implementation '..\libs\analytic_tasks'
    echo TODO
    goto enterTaskName
-) ELSE IF "%TASK_TO_EXECUTE%"=="15" (
+) ELSE IF "%TASK_TO_EXECUTE%"=="16" (
    call %PYTHON_HOME%\python.exe %PY_SCRIPT_DIR%unique_views_of_available_pdf.py %DATABASE_NAME% %USER_NAME% %RESULT_DIR%unique_views_of_available_pdf.csv
    goto enterTaskName
-) ELSE IF "%TASK_TO_EXECUTE%"=="16" (
+) ELSE IF "%TASK_TO_EXECUTE%"=="17" (
    call %PYTHON_HOME%\python.exe %PY_SCRIPT_DIR%unique_scrolling_of_available_pdf.py %DATABASE_NAME% %USER_NAME% %RESULT_DIR%unique_scrolling_of_available_pdf.csv
    goto enterTaskName
-) ELSE IF "%TASK_TO_EXECUTE%"=="17" (
+) ELSE IF "%TASK_TO_EXECUTE%"=="18" (
    call %PYTHON_HOME%\python.exe %PY_SCRIPT_DIR%words_from_pdf_search.py %DATABASE_NAME% %USER_NAME% %RESULT_DIR%words_from_pdf_search.csv
    goto enterTaskName
-) ELSE IF "%TASK_TO_EXECUTE%"=="18" (
-
+) ELSE IF "%TASK_TO_EXECUTE%"=="19" (
    echo Thank you for using the tool!
    goto end
 ) ELSE (
