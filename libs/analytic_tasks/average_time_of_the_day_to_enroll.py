@@ -2,6 +2,7 @@ import sys
 import datetime
 import pandas as pd
 import re
+import csv
 from urllib.parse import unquote
 
 # NOTE: Appending module from the folder above.
@@ -42,9 +43,9 @@ def write_result_to_file(result_file, result):
 
 def main(argv):
     print('Start calculating average time to enroll the course.')
-    database_name = argv[1]
-    user_name = argv[2]
-    result_file = argv[3]
+    database_name = "OpenEduDatabase"
+    user_name = "OPENEDU"
+    result_file = "average_time_of_the_day_to_enroll.csv"
 
     connection = open_db_connection(database_name, user_name)
     enrollment_distribution = get_enrollment_distribution(connection)
