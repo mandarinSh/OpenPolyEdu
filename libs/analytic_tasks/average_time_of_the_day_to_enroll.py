@@ -21,7 +21,7 @@ def get_enrollment_distribution(connection):
         SELECT (log_line ->> 'context')::json ->> 'course_id' AS identifier,
         to_timestamp(log_line ->> 'time', 'YYYY-MM-DD"T"HH24:MI:SS')::TIME AS target_time
         FROM logs 
-        WHERE log_line ->> 'event_type' = '.activated' 
+        WHERE log_line ->> 'event_type' LIKE '%enrollment.activated' 
     ) uniqueCourseIds GROUP BY course_identifier
     '''
     connection.set_isolation_level(ISOLATION_LEVEL_AUTOCOMMIT)
@@ -52,7 +52,7 @@ def main(argv):
     close_db_connection(connection)
 
     write_result_to_file(result_file, enrollment_distribution)
-    println(f"The result file could be found at ${result_file}")
+    print(f'The result file could be found at ${result_file}')
 
 
 if __name__ == '__main__':
