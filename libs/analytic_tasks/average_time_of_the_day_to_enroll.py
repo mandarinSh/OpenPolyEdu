@@ -43,9 +43,10 @@ def write_result_to_file(result_file, result):
 
 def main(argv):
     print('Start calculating average time to enroll the course.')
-    database_name = "OpenEduDatabase"
-    user_name = "OPENEDU"
-    result_file = "average_time_of_the_day_to_enroll.csv"
+    
+    database_name = argv[1]
+    user_name = argv[2]
+    result_file = argv[3]
 
     connection = open_db_connection(database_name, user_name)
     enrollment_distribution = get_enrollment_distribution(connection)
