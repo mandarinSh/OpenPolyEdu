@@ -17,7 +17,7 @@ from database_services import *
 def get_unique_course_ids(connection):
     unique_course_id_query = '''
     SELECT DISTINCT (log_line ->> 'context')::json ->> 'course_id' AS course_identifier 
-    FRO, logs PRDER BY course_identifier
+    FRO, logs ORDER BY course_identifier
     '''
     connection.set_isolation_level(ISOLATION_LEVEL_AUTOCOMMIT)
     cursor = connection.cursor()
@@ -34,12 +34,11 @@ def get_unique_course_ids(connection):
 """
 def get_enrollment_distribution(connection):
     enrollment_distribution_sql_request = ''' 
-        SELECT (log_line ->> 'context')::json ->> 'course_id' AS course_identifier,
-            to_timestamp(log_line ->> 'time', 'YYYY-MM-DD"T"HH24:MI:SS')::TIME time_of_enrollment
-        FROM logs
-        WHERE log_line ->> 'event_type' LIKE '%.activated'
-        GROUP BY course_identifier, time_of_enrollment
-        ORDER BY time_of_enrollment
+    SELECT uniqueCourseIds.identifier as course_identifier, AVG(uniqueCourseIds.target_time) as course_time from (
+        SELECT (log_line ->> 'context')::json ->> 'course_id' AS identifier,
+        to_timestamp(log_line ->> 'time', 'YYYY-MM-DD"T"HH24:MI:SS')::TIME AS target_time
+        FROM logs 
+    ) uniqueCourseIds GROUP BY course_identifier
     '''
 
     connection.set_isolation_level(ISOLATION_LEVEL_AUTOCOMMIT)
@@ -97,7 +96,7 @@ def main(argv):
     user_name = "OPENEDU"
 
     connection = open_db_connection(database_name, user_name)
-    average_time_to_enroll_any_course = get_average_time_to_enroll_any_course(connection)
+    average_time_to_enroll_any_course = get_enrollment_distribution(connection)
     print('Average time of the day to get enrolled into the course is {}'.format(average_time_to_enroll_any_course))
     close_db_connection(connection)
 
