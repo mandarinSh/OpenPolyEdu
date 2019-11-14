@@ -3,6 +3,9 @@ import datetime
 import pandas as pd
 import re
 from urllib.parse import unquote
+
+# NOTE: Appending module from the folder above.
+sys.path.append("../scripts/")
 from database_services import *
 
 
@@ -88,13 +91,14 @@ def generate_heatmap(x_values, y_values, z_values):
 
 def main(argv):
     print('Start calculating page activity on course distributed by day.')
-    database_name = argv[1]
-    user_name = argv[2]
+
+    # NOTE: Mocking credentials while debugging.
+    database_name = "OpenEduDatabase"
+    user_name = "OPENEDU"
 
     connection = open_db_connection(database_name, user_name)
     average_time_to_enroll_any_course = get_average_time_to_enroll_any_course(connection)
-    print('Average time of the day to get enrolled into the course is 
-{}'.format(average_time_to_enroll_any_course))
+    print('Average time of the day to get enrolled into the course is {}'.format(average_time_to_enroll_any_course))
     close_db_connection(connection)
 
 

@@ -74,7 +74,7 @@ IF "%TASK_TO_EXECUTE%"=="1" (
    echo TODO
    goto enterTaskName
 ) ELSE IF "%TASK_TO_EXECUTE%"=="15" (
-   call %PYTHON_HOME%\python.exe %ANALYTICS_TASKS_DIR%averga_time_of_the_day_to_enroll_courses.py
+   call %PYTHON_HOME%\python.exe C:\Users\koltsa\Developer\OpenPolyEdu\libs\analytic_tasks\averga_time_of_the_day_to_enroll_courses.py %DATABASE_NAME% %USER_NAME%
    goto enterTaskName
 ) ELSE IF "%TASK_TO_EXECUTE%"=="16" (
    echo Thank you for using the tool!
