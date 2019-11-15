@@ -51,38 +51,34 @@ def calculate_users_and_ids(connection):
     SELECT * FROM groupped
     ORDER BY user_name_or_id, event_type;''';
 
-    get_users_events_by_pages_query = '''with events (name) as 
-    (values ('play_video'), ('load_video'), ('edx.special_exam.proctored.attempt.started'), ('edx.ui.lms.outline.selected')),
-    modules (url) as (		
+    get_users_events_by_pages_query = '''with events (name) as (values ('play_video'), ('pause_video'), ('load_video'), ('edx.special_exam.proctored.attempt.started'), ('edx.ui.lms.outline.selected')),
+    modules (url) as (	
 	with pages (page) as (select distinct (log_line ->> 'page') from logs)
-	select distinct url from (
-		select page,
+	select distinct
 		case
     		when POSITION('?' in page) > 0 THEN SUBSTRING(page, 0, POSITION('?' in page))
     		when POSITION('#' in page) > 0 THEN SUBSTRING(page, 0, POSITION('#' in page))
     		else page
   		end as url
 		from pages
-		where page is not null) 
-	as urls
+		where page is not null
     ),
-    mod_event (usr, pg, mdl, evt) as (
-	with pages (page) as (select distinct (log_line ->> 'page') from logs)
+    mod_event (usr, mdl, evt) as (
 	select
 		coalesce (l.log_line ->> 'username', '<<' || (l.log_line #>> '{context, user_id}') || '>>'),
-		pg.page,
 		case
-    		when POSITION('?' in pg.page) > 0 THEN SUBSTRING(pg.page, 0, POSITION('?' in pg.page))
-    		when POSITION('#' in pg.page) > 0 THEN SUBSTRING(pg.page, 0, POSITION('#' in pg.page))
-    		else pg.page
-  		end as url,	
+    		when POSITION('?' in l.log_line ->> 'page') > 0 THEN SUBSTRING(l.log_line ->> 'page', 0, POSITION('?' in l.log_line ->> 'page'))
+    		when POSITION('#' in l.log_line ->> 'page') > 0 THEN SUBSTRING(l.log_line ->> 'page', 0, POSITION('#' in l.log_line ->> 'page'))
+    		else l.log_line ->> 'page'
+  		end as url,
 		l.log_line ->> 'event_type'
-	from logs as l, pages as pg
+	from logs as l
     )
-    select usr, mdl, evt, count (*) from mod_event
+    select usr, mdl, evt, count(*) as cnt from mod_event
     where mdl in (select url from modules)
-	    and evt in (select name from events)
-    group by usr, mdl, evt'''
+    	and evt in (select name from events)
+    group by usr, mdl, evt
+    order by cnt'''
 
     connection.set_isolation_level(ISOLATION_LEVEL_AUTOCOMMIT)
     cursor = connection.cursor()
