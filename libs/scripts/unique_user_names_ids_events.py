@@ -51,94 +51,55 @@ def calculate_users_and_ids(connection):
     SELECT * FROM groupped
     ORDER BY user_name_or_id, event_type;''';
 
-    get_users_events_by_page_1 = '''select 
-	user_events.user_name as user_name, 
-	user_events.user_id as user_id,
-	user_events.e_count as total_events_count,
-	user_events.sessions_count as sessions_count,
-	user_events.pages_count as pages_count,
-	count_plays.play_count as play_count,
- 	exam_started_event.exam_started as exam_started,	
- 	speed_change_video_events.speed_change_video as speed_change_video
-	from (
-		select
-				log_line -> 'username' as user_name,
-				log_line #>> '{context, user_id}' AS user_id,
-				count (*) as e_count,
-				count (distinct log_line -> 'session') as sessions_count,
-				count (distinct log_line -> 'page') as pages_count,
-				url_decode((log_line ->> 'event')::json ->> 'target_name') as target_name 
-				
-			from logs
-			where log_line -> 'event' != '""' 
-				and log_line -> 'username' != 'null' 
-				and log_line -> 'username' != '""' 
-				and log_line -> 'username' is not null
-				and log_line -> 'page' != 'null'
-				and (log_line ->> 'event_type' LIKE '%link_clicked' or 
-					log_line ->> 'event_type' LIKE '%selected')
-				and (log_line ->> 'event')::json ->> '''
-
-    get_users_events_by_page_2 = '''group by user_id, user_name, target_name
-		) user_events
-			
-			left join (
-				select 
-					log_line -> 'username' as user_name,
-					log_line #>> '{context, user_id}' AS user_id,
-					count (log_line -> 'event_type') as play_count
-				from logs
-				where log_line ->> 'event_type' = 'play_video'
-				group by user_id, user_name
-			) count_plays
-			on user_events.user_id = count_plays.user_id
-						
- 			left join (
- 				select 
- 					log_line -> 'username' as user_name,
- 					log_line #>> '{context, user_id}' AS user_id,
- 					count (log_line -> 'event_type') as exam_started
- 				from logs
- 				where (log_line ->> 'event_type' =  'edx.special_exam.timed.attempt.started')
- 				group by user_id, user_name
- 			) exam_started_event
- 			on user_events.user_id = exam_started_event.user_id
-			
-			left join (
- 				select 
- 					log_line -> 'username' as user_name,
- 					log_line #>> '{context, user_id}' AS user_id,
- 					count (log_line -> 'event_type') as speed_change_video
- 				from logs
- 				where log_line ->> 'event_type' = 'speed_change_video'
- 				group by user_id, user_name
- 			) speed_change_video_events
- 			on user_events.user_id = speed_change_video_events.user_id
-				
-		order by user_name;'''
-
-    for name in page_names:
-        get_users_events_by_page_query =\
-            get_users_events_by_page_1 +\
-            name[0] +\
-            get_users_events_by_page_2
+    get_users_events_by_pages_query = '''with events (name) as 
+    (values ('play_video'), ('load_video'), ('edx.special_exam.proctored.attempt.started'), ('edx.ui.lms.outline.selected')),
+    modules (url) as (		
+	with pages (page) as (select distinct (log_line ->> 'page') from logs)
+	select distinct url from (
+		select page,
+		case
+    		when POSITION('?' in page) > 0 THEN SUBSTRING(page, 0, POSITION('?' in page))
+    		when POSITION('#' in page) > 0 THEN SUBSTRING(page, 0, POSITION('#' in page))
+    		else page
+  		end as url
+		from pages
+		where page is not null) 
+	as urls
+    ),
+    mod_event (usr, pg, mdl, evt) as (
+	with pages (page) as (select distinct (log_line ->> 'page') from logs)
+	select
+		coalesce (l.log_line ->> 'username', '<<' || (l.log_line #>> '{context, user_id}') || '>>'),
+		pg.page,
+		case
+    		when POSITION('?' in pg.page) > 0 THEN SUBSTRING(pg.page, 0, POSITION('?' in pg.page))
+    		when POSITION('#' in pg.page) > 0 THEN SUBSTRING(pg.page, 0, POSITION('#' in pg.page))
+    		else pg.page
+  		end as url,	
+		l.log_line ->> 'event_type'
+	from logs as l, pages as pg
+    )
+    select usr, mdl, evt, count (*) from mod_event
+    where mdl in (select url from modules)
+	    and evt in (select name from events)
+    group by usr, mdl, evt'''
 
     connection.set_isolation_level(ISOLATION_LEVEL_AUTOCOMMIT)
     cursor = connection.cursor()
-    cursor.execute(get_unique_events_by_users_query)
-    user_names = cursor.fetchall()
+    cursor.execute(get_users_events_by_pages_query)
+    users_events_by_pages = cursor.fetchall()
     cursor.close()
     connection.commit()
 
     print('End query execution at ', datetime.datetime.now())
     print("Users and ids has been calculated")
-    return user_names
+    return users_events_by_pages
 
 
 def write_result_to_file(result_file, result):
     print('Start writing the data to file.')
     with open(result_file,"w") as file:
-        file.write(tabulate(result, headers=['user_name', 'event_type', 'count_events']))
+        file.write(tabulate(result, headers=['user_name', 'module', 'event_type', 'count_events']))
 
 
 def generate_figure(user_names):
@@ -154,9 +115,9 @@ def main(argv):
 
     connection = open_db_connection(database_name, user_name)
     get_all_pages_names(connection)
-    # user_names_and_ids = calculate_users_and_ids(connection)
-    # write_result_to_file(result_file, user_names_and_ids)
-    # print('The analytics result can be found at ', result_file)
+    users_events_by_pages = calculate_users_and_ids(connection)
+    write_result_to_file(result_file, users_events_by_pages)
+    print('The analytics result can be found at ', result_file)
     close_db_connection(connection)
 
 
