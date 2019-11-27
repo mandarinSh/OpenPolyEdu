@@ -70,7 +70,7 @@ IF "%TASK_TO_EXECUTE%"=="1" (
    call %PYTHON_HOME%\python.exe %PY_SCRIPT_DIR%play_video_count_per_day.py %DATABASE_NAME% %USER_NAME% %RESULT_DIR%play_video_count_per_day.csv
    goto enterTaskName
 ) ELSE IF "%TASK_TO_EXECUTE%"=="14" (
-   call %PYTHON_HOME%\python.exe %PY_SCRIPT_DIR%unique_user_names_ids_events.py %DATABASE_NAME% %USER_NAME% %RESULT_DIR%unique_user_names_ids_events.csv
+   call %PYTHON_HOME%\python.exe %PY_SCRIPT_DIR%unique_user_names_ids_events.py %DATABASE_NAME% %USER_NAME% %RESULT_DIR%unique_user_names_ids_events_counts
    goto enterTaskName
 ) ELSE IF "%TASK_TO_EXECUTE%"=="15" (
    @rem TODO: Put here invocation of the required implementation '..\libs\analytic_tasks'

@@ -3,7 +3,7 @@ import datetime
 from tabulate import tabulate
 from database_services import *
 import csv
-from collections import OrderedDict
+import xlsxwriter
 
 
 def get_all_pages_names(connection):
@@ -139,13 +139,25 @@ def write_result_to_table_file(result_file, result, page_names, user_names):
         key = "{},{},{}".format(line[0], line[2], line[1],)
         res_dict[key] = line[3]
 
-    with open(result_file, mode="a", encoding="utf-8") as file:
+    # write to xlsx
+    workbook = xlsxwriter.Workbook(result_file + '.xlsx')
+    worksheet = workbook.add_worksheet()
+    bold = workbook.add_format({'bold': True})
+
+    with open(result_file + '.csv', mode="a", encoding="utf-8") as file:
         writer = csv.writer(file, delimiter=',', quotechar='"', quoting=csv.QUOTE_MINIMAL)
 
+        # write to csv
         writer.writerow(table_headers_top)
         writer.writerow(table_headers)
 
-        i = 0
+        # write to xlsx
+        # table_headers_top_tuple = tuple(table_headers_top)
+        table_headers_tuple = tuple(table_headers)
+        # worksheet.write_row(0, 0, table_headers_top)
+        worksheet.write_row(1, 0, table_headers)
+
+        i = 2
         array = []
         for user in user_names:
             one_line = [user[0]]
@@ -158,13 +170,21 @@ def write_result_to_table_file(result_file, result, page_names, user_names):
                     else:
                         one_line.append(0)
 
+            # write to xlsx one by line
+            one_tuple_line = tuple(list(one_line))
+            worksheet.write_row(i, 0, one_tuple_line)
+
+            # write to csv
             array.append(one_line)
             i = i + 1
             if i > 100:
                 writer.writerows(array)
                 array = []
 
+        # write to csv
         writer.writerows(array)
+
+        workbook.close()
 
 
 def generate_figure(user_names):
