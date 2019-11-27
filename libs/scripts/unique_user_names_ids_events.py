@@ -2,6 +2,53 @@ import sys
 import datetime
 from tabulate import tabulate
 from database_services import *
+import csv
+from collections import OrderedDict
+
+
+def get_all_pages_names(connection):
+    print('Start query execution at ', datetime.datetime.now())
+
+    all_pages_query = '''select target_names.target_name from 
+    	(
+    		select url_decode((log_line ->> 'event')::json ->> 'target_name') as target_name 
+    		from logs
+    		where 
+    			(log_line ->> 'event_type' LIKE '%link_clicked' or 
+    				log_line ->> 'event_type' LIKE '%selected')
+    				and (log_line ->> 'event')::json ->> 'target_name' is not null
+    				and (log_line ->> 'event')::json ->> 'target_name' not LIKE '%текущий раздел%'
+    		group by target_name
+    	) target_names;'''
+
+    connection.set_isolation_level(ISOLATION_LEVEL_AUTOCOMMIT)
+    cursor = connection.cursor()
+    cursor.execute(all_pages_query)
+    page_names = cursor.fetchall()
+    cursor.close()
+    connection.commit()
+
+    print("Pages and page names has been calculated")
+    # print(page_names)
+    return page_names
+
+
+def get_all_users(connection):
+    print('Start query execution at ', datetime.datetime.now())
+
+    all_users_query = '''select distinct log_line ->> 'username' as username from logs order by username;'''
+
+    connection.set_isolation_level(ISOLATION_LEVEL_AUTOCOMMIT)
+    cursor = connection.cursor()
+    cursor.execute(all_users_query)
+    user_names = cursor.fetchall()
+    cursor.close()
+    connection.commit()
+
+    print("Users has been calculated")
+    # print(user_names)
+
+    return user_names
 
 
 def calculate_users_and_ids(connection):
@@ -69,6 +116,57 @@ def write_result_to_file(result_file, result):
         file.write(tabulate(result, headers=['user_name', 'event_type', 'page', 'count_events']))
 
 
+def write_result_to_table_file(result_file, result, page_names, user_names):
+    print('Start creating big table.')
+    events = [
+        'play_video',
+        'pause_video',
+        'load_video',
+        'edx.special_exam.proctored.attempt.started',
+        'edx.ui.lms.outline.selected'
+    ]
+
+    print('Start writing the data to file.')
+    table_headers = ['username']
+    table_headers_top = ['']
+    for page in page_names:
+        for event in events:
+            table_headers.append(event)
+            table_headers_top.append(page)
+
+    res_dict = {}
+    for line in result:
+        key = "{},{},{}".format(line[0], line[2], line[1],)
+        res_dict[key] = line[3]
+
+    with open(result_file, mode="a", encoding="utf-8") as file:
+        writer = csv.writer(file, delimiter=',', quotechar='"', quoting=csv.QUOTE_MINIMAL)
+
+        writer.writerow(table_headers_top)
+        writer.writerow(table_headers)
+
+        i = 0
+        array = []
+        for user in user_names:
+            one_line = [user[0]]
+
+            for page in page_names:
+                for event in events:
+                    key = "{},{},{}".format(user[0], page[0], event)
+                    if key in res_dict:
+                        one_line.append(res_dict[key])
+                    else:
+                        one_line.append(0)
+
+            array.append(one_line)
+            i = i + 1
+            if i > 100:
+                writer.writerows(array)
+                array = []
+
+        writer.writerows(array)
+
+
 def generate_figure(user_names):
     pass
 
@@ -81,9 +179,11 @@ def main(argv):
     result_file = argv[3]
 
     connection = open_db_connection(database_name, user_name)
-    # get_all_pages_names(connection)
+    page_names = get_all_pages_names(connection)
+    user_names = get_all_users(connection)
     users_events_by_pages = calculate_users_and_ids(connection)
-    write_result_to_file(result_file, users_events_by_pages)
+    # write_result_to_file(result_file, users_events_by_pages)
+    write_result_to_table_file(result_file, users_events_by_pages, page_names, user_names)
     print('The analytics result can be found at ', result_file)
     close_db_connection(connection)
 
