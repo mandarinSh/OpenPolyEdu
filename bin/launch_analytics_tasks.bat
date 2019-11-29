@@ -1,5 +1,6 @@
 @echo off
-call set_env.bat
+set BIN_DIR=%~dp0
+call %BIN_DIR%set_env.bat
 
 :enterTaskName
 echo.
@@ -14,16 +15,20 @@ echo   5. Show activity type for all users (or for particular user) on course de
 echo   6. Calculate visits count for page(URL) distributed by day.
 echo   7. Calculate total visits count for page(URL).
 echo   8. Show the user way over the pages (URL).
+echo   9. Get average time to enrol.
 echo.
 echo Utility analytics:
-echo   9. Calculate unique user names.
-echo   10. Calculate unique event names.
-echo   11. Calculate unique user names and ids.
-echo   12. Calculate URLs and names mapping
-echo   13. Show amount of video play events per day.
-echo   14. Get count of each event /for every user.
-echo   15. Pass.
-echo   16. Exit
+echo   10. Calculate unique user names.
+echo   11. Calculate unique event names.
+echo   12. Calculate unique user names and ids.
+echo   13. Calculate URLs and names mapping
+echo   14. Show amount of video play events per day.
+echo   15. Compare courses launches.
+echo   16. Show amount of unique pdfs views.
+echo   17. Show amount of unique pdfs scrolling.
+echo   18. Show words from pdf search field.
+echo   19. Get count of each event /for every user.
+echo   20. Exit
 echo.
 echo   NOTE: the result of analytics can be found in "result" directory or the browser will be opened automatically.
 echo.
@@ -55,28 +60,40 @@ IF "%TASK_TO_EXECUTE%"=="1" (
    call %PYTHON_HOME%\python.exe %PY_SCRIPT_DIR%show_user_way.py %DATABASE_NAME% %USER_NAME% %RESULT_DIR%show_user_way.txt
    goto enterTaskName
 ) ELSE IF "%TASK_TO_EXECUTE%"=="9" (
-  call %PYTHON_HOME%\python.exe %PY_SCRIPT_DIR%unique_user_names.py %DATABASE_NAME% %USER_NAME% %RESULT_DIR%unique_user_names.txt
+  call %PYTHON_HOME%\python.exe %ANALYTICS_TASKS_DIR%average_time_of_the_day_to_enroll.py %DATABASE_NAME% %USER_NAME% %RESULT_DIR%average_time_of_the_day_to_enroll.csv
   goto enterTaskName
 ) ELSE IF "%TASK_TO_EXECUTE%"=="10" (
+   call %PYTHON_HOME%\python.exe %PY_SCRIPT_DIR%unique_user_names.py %DATABASE_NAME% %USER_NAME% %RESULT_DIR%unique_user_names.txt
+   goto enterTaskName
+) ELSE IF "%TASK_TO_EXECUTE%"=="11" (
   call %PYTHON_HOME%\python.exe %PY_SCRIPT_DIR%unique_event_names.py %DATABASE_NAME% %USER_NAME% %RESULT_DIR%unique_event_names.txt
   goto enterTaskName
-) ELSE IF "%TASK_TO_EXECUTE%"=="11" (
+) ELSE IF "%TASK_TO_EXECUTE%"=="12" (
   call %PYTHON_HOME%\python.exe %PY_SCRIPT_DIR%unique_user_names_and_ids.py %DATABASE_NAME% %USER_NAME% %RESULT_DIR%unique_user_names_and_ids.txt
   goto enterTaskName
-) ELSE IF "%TASK_TO_EXECUTE%"=="12" (
+) ELSE IF "%TASK_TO_EXECUTE%"=="13" (
   call %PYTHON_HOME%\python.exe %PY_SCRIPT_DIR%urls_and_names_mapping.py %DATABASE_NAME% %USER_NAME% %RESULT_DIR%urls_and_names_mapping.csv
   goto enterTaskName
-) ELSE IF "%TASK_TO_EXECUTE%"=="13" (
-   call %PYTHON_HOME%\python.exe %PY_SCRIPT_DIR%play_video_count_per_day.py %DATABASE_NAME% %USER_NAME% %RESULT_DIR%play_video_count_per_day.csv
-   goto enterTaskName
 ) ELSE IF "%TASK_TO_EXECUTE%"=="14" (
-   call %PYTHON_HOME%\python.exe %PY_SCRIPT_DIR%unique_user_names_ids_events.py %DATABASE_NAME% %USER_NAME% %RESULT_DIR%unique_user_names_ids_events_counts
+   call %PYTHON_HOME%\python.exe %PY_SCRIPT_DIR%play_video_count_per_day.py %DATABASE_NAME% %USER_NAME% %RESULT_DIR%play_video_count_per_day.csv
    goto enterTaskName
 ) ELSE IF "%TASK_TO_EXECUTE%"=="15" (
    @rem TODO: Put here invocation of the required implementation '..\libs\analytic_tasks'
    echo TODO
    goto enterTaskName
 ) ELSE IF "%TASK_TO_EXECUTE%"=="16" (
+   call %PYTHON_HOME%\python.exe %PY_SCRIPT_DIR%unique_views_of_available_pdf.py %DATABASE_NAME% %USER_NAME% %RESULT_DIR%unique_views_of_available_pdf.csv
+   goto enterTaskName
+) ELSE IF "%TASK_TO_EXECUTE%"=="17" (
+   call %PYTHON_HOME%\python.exe %PY_SCRIPT_DIR%unique_scrolling_of_available_pdf.py %DATABASE_NAME% %USER_NAME% %RESULT_DIR%unique_scrolling_of_available_pdf.csv
+   goto enterTaskName
+) ELSE IF "%TASK_TO_EXECUTE%"=="18" (
+   call %PYTHON_HOME%\python.exe %PY_SCRIPT_DIR%words_from_pdf_search.py %DATABASE_NAME% %USER_NAME% %RESULT_DIR%words_from_pdf_search.csv
+   goto enterTaskName
+) ELSE IF "%TASK_TO_EXECUTE%"=="19" (
+   call %PYTHON_HOME%\python.exe %PY_SCRIPT_DIR%unique_user_names_ids_events.py %DATABASE_NAME% %USER_NAME% %RESULT_DIR%unique_user_names_ids_events_counts
+   goto enterTaskName
+) ELSE IF "%TASK_TO_EXECUTE%"==20"  (
    echo Thank you for using the tool!
    goto end
 ) ELSE (

@@ -171,3 +171,6 @@ from logs
 where log_line #>> '{context, module, display_name}' != 'null'
 group by module_name, time_run
 order by interaction_count desc
+
+#get pdfs text search words
+select    unescape(split_part(log_line ->> 'event', ',', 6)) as r  from logs where log_line ->> 'event_type' = 'textbook.pdf.search.executed';
