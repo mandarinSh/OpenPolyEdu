@@ -27,7 +27,8 @@ echo   15. Compare courses launches.
 echo   16. Show amount of unique pdfs views.
 echo   17. Show amount of unique pdfs scrolling.
 echo   18. Show words from pdf search field.
-echo   19. Exit
+echo   19. Get count of each event /for every user.
+echo   20. Exit
 echo.
 echo   NOTE: the result of analytics can be found in "result" directory or the browser will be opened automatically.
 echo.
@@ -90,6 +91,9 @@ IF "%TASK_TO_EXECUTE%"=="1" (
    call %PYTHON_HOME%\python.exe %PY_SCRIPT_DIR%words_from_pdf_search.py %DATABASE_NAME% %USER_NAME% %RESULT_DIR%words_from_pdf_search.csv
    goto enterTaskName
 ) ELSE IF "%TASK_TO_EXECUTE%"=="19" (
+   call %PYTHON_HOME%\python.exe %PY_SCRIPT_DIR%unique_user_names_ids_events.py %DATABASE_NAME% %USER_NAME% %RESULT_DIR%unique_user_names_ids_events_counts
+   goto enterTaskName
+) ELSE IF "%TASK_TO_EXECUTE%"==20"  (
    echo Thank you for using the tool!
    goto end
 ) ELSE (
