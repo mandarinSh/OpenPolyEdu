@@ -2,8 +2,12 @@
 set BIN_DIR=%~dp0
 call %BIN_DIR%set_env.bat
 
-echo Extracting the JDK to '%JDK_PATH%'
-%SEV_ZIP_PATH% x "%SOFT_PATH%openjdk-11.0.2_windows-x64_bin.zip" -o"%JDK_PATH%"
+set JAVA_DISTR_FILE=%SOFT_PATH%openjdk-11.0.2_windows-x64_bin.zip
+if exist %JAVA_DISTR_FILE% (
+  echo Extracting the JDK to '%JDK_PATH%'
+  %SEV_ZIP_PATH% x %JAVA_DISTR_FILE% -o"%JDK_PATH%"
+)
+
 echo Extracting PostgreSQL to '%POSTGRESQL_PATH%'
 %SEV_ZIP_PATH% x "%SOFT_PATH%postgresql-12.0-1-windows-x64-binaries.zip" -o"%POSTGRESQL_PATH%"
 echo Extracting Python to '%PYTHON_PATH%'
