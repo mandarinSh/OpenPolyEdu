@@ -2,7 +2,8 @@ import sys
 import datetime
 import plotly.express as px
 import pandas as pd
-import csv
+import codecs
+from tabulate import tabulate
 from database_services import *
 
 
@@ -10,10 +11,13 @@ def unique_views_of_available_pdf(connection):
     print('Start query execution at ', datetime.datetime.now())
 
     user_pages_visited_at_timedate = """
-        SELECT DISTINCT trim((log_line ->> 'event')::json ->> 'query'), log_line ->> 'time' AS time
+        SELECT 
+           count(*) AS count_number,
+           trim((log_line ->> 'event')::json ->> 'query') as search_word
         FROM logs
         WHERE log_line ->> 'event_type' = 'textbook.pdf.search.executed'
-        ORDER BY time;
+        GROUP BY search_word
+        ORDER BY count_number desc;
     """
 
     connection.set_isolation_level(ISOLATION_LEVEL_AUTOCOMMIT)
@@ -30,12 +34,8 @@ def unique_views_of_available_pdf(connection):
 
 def write_result_to_file(result_file, result):
     print('Start writing the data to file.')
-    with open(result_file, mode='w', encoding='utf-8') as res_file:
-        field_names = ['word', 'time']
-        result_file_writer = csv.writer(res_file, delimiter=',', quotechar='"', quoting=csv.QUOTE_MINIMAL)
-        result_file_writer.writerow(field_names)
-        for res in result:
-            result_file_writer.writerow(res)
+    with codecs.open(result_file,"w", "utf-8") as res_file:
+        res_file.write(tabulate(result, headers=['count_number', 'word']))
 
 
 def generate_figure(file_with_data):
