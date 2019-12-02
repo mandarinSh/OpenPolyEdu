@@ -1,12 +1,5 @@
 import sys
-import datetime
-import pandas as pd
-import re
 import csv
-from urllib.parse import unquote
-
-# NOTE: Appending module from the folder above.
-sys.path.append("../scripts/")
 from database_services import *
 
 
@@ -32,6 +25,7 @@ def get_enrollment_distribution(connection):
     connection.commit()
     return enrollment_distribution_course_id_and_time
 
+
 def write_result_to_file(result_file, result):
     print('Start writing the data to file.')
     with open(result_file, mode='w', encoding='utf-8') as res_file:
@@ -40,6 +34,7 @@ def write_result_to_file(result_file, result):
         result_file_writer.writerow(field_names)
         for res in result:
             result_file_writer.writerow(res)
+
 
 def main(argv):
     print('Start calculating average time to enroll the course.')
@@ -53,7 +48,7 @@ def main(argv):
     close_db_connection(connection)
 
     write_result_to_file(result_file, enrollment_distribution)
-    print(f'The result file could be found at ${result_file}')
+    print(f'The result file could be found at {result_file}')
 
 
 if __name__ == '__main__':

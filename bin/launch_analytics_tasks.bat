@@ -64,7 +64,7 @@ IF "%TASK_TO_EXECUTE%"=="1" (
    call %PYTHON_HOME%\python.exe %PY_SCRIPT_DIR%show_user_way.py %DATABASE_NAME% %USER_NAME% %RESULT_DIR%show_user_way.txt
    goto enterTaskName
 ) ELSE IF "%TASK_TO_EXECUTE%"=="9" (
-  call %PYTHON_HOME%\python.exe %ANALYTICS_TASKS_DIR%average_time_of_the_day_to_enroll.py %DATABASE_NAME% %USER_NAME% %RESULT_DIR%average_time_of_the_day_to_enroll.csv
+  call %PYTHON_HOME%\python.exe %PY_SCRIPT_DIR%average_time_of_the_day_to_enroll.py %DATABASE_NAME% %USER_NAME% %RESULT_DIR%average_time_of_the_day_to_enroll.csv
   goto enterTaskName
 ) ELSE IF "%TASK_TO_EXECUTE%"=="10" (
    call %PYTHON_HOME%\python.exe %PY_SCRIPT_DIR%words_from_pdf_search.py %DATABASE_NAME% %USER_NAME% %RESULT_DIR%words_from_pdf_search.csv
