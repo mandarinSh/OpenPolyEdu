@@ -40,58 +40,58 @@ echo.
 
 IF NOT DEFINED TASK_TO_EXECUTE SET "TASK_TO_EXECUTE=0"
 IF "%TASK_TO_EXECUTE%"=="1" (
-  call %PYTHON_HOME%\python.exe %PY_SCRIPT_DIR%user_time_on_course.py %DATABASE_NAME% %USER_NAME% %RESULT_DIR%user_time_on_course.csv
+  call %PYTHON_HOME%\python.exe %PY_SCRIPT_DIR%user_time_on_course.py %DATABASE_NAME% %USER_NAME% %RESULT_DIR%01_user_time_on_course.csv
   goto enterTaskName
 ) ELSE IF "%TASK_TO_EXECUTE%"=="2" (
-   call %PYTHON_HOME%\python.exe %PY_SCRIPT_DIR%users_who_enrolled_but_not_started.py %DATABASE_NAME% %USER_NAME% %RESULT_DIR%users_who_enrolled_but_not_started.csv
+   call %PYTHON_HOME%\python.exe %PY_SCRIPT_DIR%users_who_enrolled_but_not_started.py %DATABASE_NAME% %USER_NAME% %RESULT_DIR%02_users_who_enrolled_but_not_started.csv
    goto enterTaskName
 ) ELSE IF "%TASK_TO_EXECUTE%"=="3" (
-  call %PYTHON_HOME%\python.exe %PY_SCRIPT_DIR%users_who_started_but_not_finished_the_course.py %DATABASE_NAME% %USER_NAME% %RESULT_DIR%users_who_started_but_not_finished_the_course.csv
+  call %PYTHON_HOME%\python.exe %PY_SCRIPT_DIR%users_who_started_but_not_finished_the_course.py %DATABASE_NAME% %USER_NAME% %RESULT_DIR%03_users_who_started_but_not_finished_the_course.csv
   goto enterTaskName
 ) ELSE IF "%TASK_TO_EXECUTE%"=="4" (
-    call %PYTHON_HOME%\python.exe %PY_SCRIPT_DIR%users_who_finished_the_course.py %DATABASE_NAME% %USER_NAME% %RESULT_DIR%users_who_finished_the_course.csv
+    call %PYTHON_HOME%\python.exe %PY_SCRIPT_DIR%users_who_finished_the_course.py %DATABASE_NAME% %USER_NAME% %RESULT_DIR%04_users_who_finished_the_course.csv
     goto enterTaskName
 ) ELSE IF "%TASK_TO_EXECUTE%"=="5" (
-     call %PYTHON_HOME%\python.exe %PY_SCRIPT_DIR%distribution_of_user_actions_on_course_by_day.py %DATABASE_NAME% %USER_NAME% %RESULT_DIR%distribution_of_user_actions_on_course_by_day.csv
+     call %PYTHON_HOME%\python.exe %PY_SCRIPT_DIR%distribution_of_user_actions_on_course_by_day.py %DATABASE_NAME% %USER_NAME% %RESULT_DIR%05_distribution_of_user_actions_on_course_by_day.csv
      goto enterTaskName
 ) ELSE IF "%TASK_TO_EXECUTE%"=="6" (
-   call %PYTHON_HOME%\python.exe %PY_SCRIPT_DIR%page_activity_on_course_distributed_by_day.py %DATABASE_NAME% %USER_NAME% %RESULT_DIR%page_activity_on_course_distributed_by_day.csv
+   call %PYTHON_HOME%\python.exe %PY_SCRIPT_DIR%page_activity_on_course_distributed_by_day.py %DATABASE_NAME% %USER_NAME% %RESULT_DIR%06_page_activity_on_course_distributed_by_day.csv
    goto enterTaskName
 ) ELSE IF "%TASK_TO_EXECUTE%"=="7" (
-  call %PYTHON_HOME%\python.exe %PY_SCRIPT_DIR%page_activity_on_course_total_number_of_visits.py %DATABASE_NAME% %USER_NAME% %RESULT_DIR%page_activity_on_course_total_number_of_visits.csv
+  call %PYTHON_HOME%\python.exe %PY_SCRIPT_DIR%page_activity_on_course_total_number_of_visits.py %DATABASE_NAME% %USER_NAME% %RESULT_DIR%07_page_activity_on_course_total_number_of_visits.csv
   goto enterTaskName
 ) ELSE IF "%TASK_TO_EXECUTE%"=="8" (
-   call %PYTHON_HOME%\python.exe %PY_SCRIPT_DIR%show_user_way.py %DATABASE_NAME% %USER_NAME% %RESULT_DIR%show_user_way.txt
+   call %PYTHON_HOME%\python.exe %PY_SCRIPT_DIR%show_user_way.py %DATABASE_NAME% %USER_NAME% %RESULT_DIR%08_show_user_way.txt
    goto enterTaskName
 ) ELSE IF "%TASK_TO_EXECUTE%"=="9" (
-  call %PYTHON_HOME%\python.exe %PY_SCRIPT_DIR%average_time_of_the_day_to_enroll.py %DATABASE_NAME% %USER_NAME% %RESULT_DIR%average_time_of_the_day_to_enroll.csv
+  call %PYTHON_HOME%\python.exe %PY_SCRIPT_DIR%average_time_of_the_day_to_enroll.py %DATABASE_NAME% %USER_NAME% %RESULT_DIR%09_average_time_of_the_day_to_enroll.csv
   goto enterTaskName
 ) ELSE IF "%TASK_TO_EXECUTE%"=="10" (
-   call %PYTHON_HOME%\python.exe %PY_SCRIPT_DIR%words_from_pdf_search.py %DATABASE_NAME% %USER_NAME% %RESULT_DIR%words_from_pdf_search.csv
+   call %PYTHON_HOME%\python.exe %PY_SCRIPT_DIR%words_from_pdf_search.py %DATABASE_NAME% %USER_NAME% %RESULT_DIR%10_words_from_pdf_search.csv
    goto enterTaskName
 ) ELSE IF "%TASK_TO_EXECUTE%"=="11" (
-  call %PYTHON_HOME%\python.exe %PY_SCRIPT_DIR%unique_views_of_available_pdf.py %DATABASE_NAME% %USER_NAME% %RESULT_DIR%unique_views_of_available_pdf.csv
+  call %PYTHON_HOME%\python.exe %PY_SCRIPT_DIR%unique_views_of_available_pdf.py %DATABASE_NAME% %USER_NAME% %RESULT_DIR%11_unique_views_of_available_pdf.csv
   goto enterTaskName
 ) ELSE IF "%TASK_TO_EXECUTE%"=="12" (
-  call %PYTHON_HOME%\python.exe %PY_SCRIPT_DIR%unique_user_names.py %DATABASE_NAME% %USER_NAME% %RESULT_DIR%unique_user_names.txt
+  call %PYTHON_HOME%\python.exe %PY_SCRIPT_DIR%unique_user_names.py %DATABASE_NAME% %USER_NAME% %RESULT_DIR%12_unique_user_names.txt
   goto enterTaskName
 ) ELSE IF "%TASK_TO_EXECUTE%"=="13" (
-  call %PYTHON_HOME%\python.exe %PY_SCRIPT_DIR%unique_event_names.py %DATABASE_NAME% %USER_NAME% %RESULT_DIR%unique_event_names.txt
+  call %PYTHON_HOME%\python.exe %PY_SCRIPT_DIR%unique_event_names.py %DATABASE_NAME% %USER_NAME% %RESULT_DIR%13_unique_event_names.txt
   goto enterTaskName
 ) ELSE IF "%TASK_TO_EXECUTE%"=="14" (
-  call %PYTHON_HOME%\python.exe %PY_SCRIPT_DIR%unique_user_names_and_ids.py %DATABASE_NAME% %USER_NAME% %RESULT_DIR%unique_user_names_and_ids.txt
+  call %PYTHON_HOME%\python.exe %PY_SCRIPT_DIR%unique_user_names_and_ids.py %DATABASE_NAME% %USER_NAME% %RESULT_DIR%14_unique_user_names_and_ids.txt
   goto enterTaskName
 ) ELSE IF "%TASK_TO_EXECUTE%"=="15" (
-  call %PYTHON_HOME%\python.exe %PY_SCRIPT_DIR%urls_and_names_mapping.py %DATABASE_NAME% %USER_NAME% %RESULT_DIR%urls_and_names_mapping.csv
+  call %PYTHON_HOME%\python.exe %PY_SCRIPT_DIR%urls_and_names_mapping.py %DATABASE_NAME% %USER_NAME% %RESULT_DIR%15_urls_and_names_mapping.csv
   goto enterTaskName
 ) ELSE IF "%TASK_TO_EXECUTE%"=="16" (
-  call %PYTHON_HOME%\python.exe %PY_SCRIPT_DIR%play_video_count_per_day.py %DATABASE_NAME% %USER_NAME% %RESULT_DIR%play_video_count_per_day.csv
+  call %PYTHON_HOME%\python.exe %PY_SCRIPT_DIR%play_video_count_per_day.py %DATABASE_NAME% %USER_NAME% %RESULT_DIR%16_play_video_count_per_day.csv
   goto enterTaskName
 ) ELSE IF "%TASK_TO_EXECUTE%"=="17" (
-  call %PYTHON_HOME%\python.exe %PY_SCRIPT_DIR%unique_scrolling_of_available_pdf.py %DATABASE_NAME% %USER_NAME% %RESULT_DIR%unique_scrolling_of_available_pdf.csv
+  call %PYTHON_HOME%\python.exe %PY_SCRIPT_DIR%unique_scrolling_of_available_pdf.py %DATABASE_NAME% %USER_NAME% %RESULT_DIR%17_unique_scrolling_of_available_pdf.csv
   goto enterTaskName
 ) ELSE IF "%TASK_TO_EXECUTE%"=="18" (
-  call %PYTHON_HOME%\python.exe %PY_SCRIPT_DIR%unique_user_names_ids_events.py %DATABASE_NAME% %USER_NAME% %RESULT_DIR%unique_user_names_ids_events_counts
+  call %PYTHON_HOME%\python.exe %PY_SCRIPT_DIR%unique_user_names_ids_events.py %DATABASE_NAME% %USER_NAME% %RESULT_DIR%18_unique_user_names_ids_events_counts
   goto enterTaskName
 ) ELSE IF "%TASK_TO_EXECUTE%"=="19" (
   @rem TODO: Put here invocation of the required implementation '..\libs\analytic_tasks'
