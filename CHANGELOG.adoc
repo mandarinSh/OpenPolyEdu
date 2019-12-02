@@ -65,3 +65,13 @@ v0.0.11
   6. Presentations are updated
   7. Improvements in logging
   8. Few more minor points I even do not remember =)
+
+v0.0.12
+  1. Several new analytic tasks
+
+v0.0.13
+  1. Analytic tasks classification per: Main, Utility, In Development
+  2. Analytic tasks for searching over PDFs
+  3. Several bug fixes in launch scripts
+  4. Sample results, including in HTML view
+  5. Articles added
