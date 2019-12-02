@@ -1,7 +1,7 @@
 set BIN_DIR=%~dp0
 set PROJECT_DIR=%BIN_DIR%..
 
-set WORKDIR_PATH=%PROJECT_DIR%\workdir\
+set WORKDIR_PATH=..\workdir\
 set SOFT_PATH=%PROJECT_DIR%\soft\
 set PY_SCRIPT_DIR=%PROJECT_DIR%\libs\scripts\
 set ANALYTICS_TASKS_DIR=%PROJECT_DIR%\libs\analytic_tasks\
